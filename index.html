@@ -947,12 +947,299 @@ footer .saq-footer-src{display:flex;flex-direction:column;gap:6px;max-width:560p
 footer .saq-footer-note{line-height:1.5}
 footer .saq-footer-date{margin-top:-2px}
 html[data-saq-theme="dark"] footer .saq-footer-note{color:var(--theme-muted)}
-</style><script>if(/^https?:$/.test(location.protocol))document.documentElement.classList.add('saq-can-mask')</script></head><body>
-<header class="header"><div class="shell nav"><a href="#home" class="logo" data-route="home">SAQ<span>✦</span></a><nav id="navlinks" class="navlinks" aria-label="Основная навигация"><button class="navlink" data-route="home">Главная</button><button class="navlink" data-route="check">Экспресс-проверка</button><button class="navlink" data-route="scanner">Правовой сканер</button><button class="navlink" data-route="practice">Юрпрактика</button><button class="navlink" data-route="about">О проекте</button></nav><div class="saq-language-switch" role="group" aria-label="Язык интерфейса"><button type="button" data-saq-lang="ru" aria-pressed="true" lang="ru" title="Русский">RU</button><button type="button" data-saq-lang="kk" aria-pressed="false" lang="kk" title="Қазақша">ҚАЗ</button><button type="button" data-saq-lang="en" aria-pressed="false" lang="en" title="English">EN</button></div><div class="saq-settings-wrap" id="saq-settings-wrap"><button type="button" id="saq-settings-toggle" class="saq-settings-trigger" aria-label="Настройки оформления" title="Настройки оформления" aria-expanded="false" aria-controls="saq-settings-panel">⚙</button><aside class="saq-settings-panel" id="saq-settings-panel" aria-label="Настройки оформления" hidden><h2>Оформление ✦</h2><p class="saq-settings-hint">Выберите удобную тему и цветовую схему.</p><span class="saq-settings-label">Тема</span><div class="saq-settings-modes" role="group" aria-label="Тема оформления"><button type="button" class="saq-mode-choice" data-saq-mode="light" aria-pressed="true">☀ Светлая</button><button type="button" class="saq-mode-choice" data-saq-mode="dark" aria-pressed="false">☾ Тёмная</button></div><span class="saq-settings-label">Цветовая схема</span><div class="saq-settings-schemes" role="group" aria-label="Цветовая схема"><button type="button" class="saq-settings-choice" data-saq-scheme="barbie" aria-pressed="true"><span><span class="saq-settings-swatch" style="--swatch-a:#e91c79;--swatch-b:#fff5fa"></span>Barbie Pink</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="burgundy" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8f234e;--swatch-b:#fff7ed"></span>Burgundy</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="lavender" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8153bc;--swatch-b:#ffe9f3"></span>Lavender</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="rose-gold" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#a94770;--swatch-b:#e8bc89"></span>Rose Gold</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button></div><div class="saq-settings-footer">Выбор сохраняется на этом устройстве автоматически.</div></aside></div><button id="menu" class="menu" aria-expanded="false" aria-controls="navlinks" aria-label="Открыть меню">☰</button></div></header>
+
+/* v25: «Доступность» in the ⚙ panel */
+.saq-a11y{margin-top:19px}
+.saq-a11y-list{display:grid;gap:8px}
+.saq-a11y-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:44px;padding:9px 11px;border:1px solid var(--theme-border);border-radius:12px;background:var(--theme-surface);color:var(--theme-text);font-size:12px;font-weight:800;line-height:1.3;text-align:left;cursor:pointer}
+.saq-a11y-switch:hover{background:var(--theme-soft)}
+.saq-a11y-switch:focus-visible,.saq-a11y-reset:focus-visible{outline:3px solid var(--theme-focus);outline-offset:2px}
+.saq-a11y-track{position:relative;flex:0 0 40px;width:40px;height:22px;border-radius:999px;background:var(--theme-soft-2);border:1px solid var(--theme-border);transition:background-color .2s ease,border-color .2s ease}
+.saq-a11y-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--theme-surface);border:1px solid var(--theme-border);box-shadow:0 1px 3px rgba(0,0,0,.22);transition:transform .2s ease}
+.saq-a11y-switch[aria-checked="true"]{border-color:var(--theme-accent);box-shadow:inset 0 0 0 1px var(--theme-accent)}
+.saq-a11y-switch[aria-checked="true"] .saq-a11y-track{background:var(--theme-accent);border-color:var(--theme-accent)}
+.saq-a11y-switch[aria-checked="true"] .saq-a11y-thumb{transform:translateX(18px);border-color:var(--theme-accent)}
+.saq-a11y-reset{margin-top:12px;width:100%;min-height:44px;padding:9px 12px;border:1px dashed var(--theme-border);border-radius:12px;background:transparent;color:var(--theme-accent-2);font-size:12px;font-weight:800;line-height:1.3;cursor:pointer}
+.saq-a11y-reset:hover{background:var(--theme-soft)}
+.saq-a11y-status{margin:8px 0 0;font-size:11px;color:var(--theme-muted)}
+.saq-a11y-status:empty{display:none}
+@media(max-width:760px){.saq-a11y-switch,.saq-a11y-reset{min-height:46px}}
+
+/* 1) Large text: font sizes are scaled by the script; here only what the stylesheet cannot reach */
+html[data-saq-text="large"] footer .logo{font-size:27.6px!important}
+
+/* 2) High contrast: ≥ 7:1 for text in every theme and colour scheme */
+html[data-saq-contrast="high"]{--theme-bg:#ffffff;--theme-surface:#ffffff;--theme-soft:#fff6fa;--theme-soft-2:#ffeef5;--theme-ink:#1d0712;--theme-text:#24101a;--theme-muted:#4a2638;--theme-border:#5a3044;--theme-accent:#8a0b46;--theme-accent-2:#6a0835;--theme-on-accent:#ffffff;--theme-gold:#6b4a1f;--theme-focus:#1d0712;--theme-panel:#ffffff;--theme-hero-from:#ffffff;--theme-hero-to:#ffffff;--theme-shadow:none;--theme-success-bg:#e6f6ea;--theme-success-fg:#14532d;--theme-warn-bg:#fff1df;--theme-warn-fg:#6b3405;--theme-error-bg:#fff0f2;--theme-error-fg:#7f0f2a;--ink:#1d0712;--text:#24101a;--muted:#4a2638;--pink:#8a0b46;--wine:#5e0a30;--border:#5a3044}
+html[data-saq-contrast="high"][data-saq-palette="burgundy"]{--theme-accent:#6a1535;--theme-accent-2:#4d0f27;--pink:#6a1535}
+html[data-saq-contrast="high"][data-saq-palette="lavender"]{--theme-accent:#4a2a7d;--theme-accent-2:#36205c;--pink:#4a2a7d}
+html[data-saq-contrast="high"][data-saq-palette="rose-gold"]{--theme-accent:#6e2a47;--theme-accent-2:#521f35;--pink:#6e2a47}
+html[data-saq-contrast="high"][data-saq-theme="dark"]{--theme-bg:#0d0a0f;--theme-surface:#161118;--theme-soft:#211a24;--theme-soft-2:#2c222e;--theme-ink:#ffffff;--theme-text:#fbf3f7;--theme-muted:#ecdbe4;--theme-border:#e0c4d2;--theme-accent:#ffb3d5;--theme-accent-2:#ffc4df;--theme-on-accent:#1a0b14;--theme-gold:#f1d3a0;--theme-focus:#ffffff;--theme-panel:#161118;--theme-hero-from:#0d0a0f;--theme-hero-to:#0d0a0f;--theme-success-bg:#0f2e1e;--theme-success-fg:#c8f7d8;--theme-warn-bg:#33230f;--theme-warn-fg:#ffe4bd;--theme-error-bg:#3a1520;--theme-error-fg:#ffd0dc;--ink:#ffffff;--text:#fbf3f7;--muted:#ecdbe4;--pink:#ffb3d5;--wine:#ffc4df;--border:#e0c4d2}
+html[data-saq-contrast="high"][data-saq-theme="dark"][data-saq-palette="burgundy"]{--theme-accent:#f7b6cb;--theme-accent-2:#ffc7d8;--pink:#f7b6cb}
+html[data-saq-contrast="high"][data-saq-theme="dark"][data-saq-palette="lavender"]{--theme-accent:#d9c4ff;--theme-accent-2:#e2d2ff;--pink:#d9c4ff}
+html[data-saq-contrast="high"][data-saq-theme="dark"][data-saq-palette="rose-gold"]{--theme-accent:#f4c1d2;--theme-accent-2:#ffd0de;--pink:#f4c1d2}
+html[data-saq-contrast="high"] body{background:var(--theme-bg);color:var(--theme-text)}
+html[data-saq-contrast="high"] body *:not(svg):not(svg *){border-color:var(--theme-border)}
+html[data-saq-contrast="high"] [aria-pressed="true"],html[data-saq-contrast="high"] [aria-checked="true"]{border-color:var(--theme-accent)!important}
+html[data-saq-contrast="high"] :is(.footer .shell,.footer .saq-footer-note,.status){color:var(--theme-muted)!important}
+html[data-saq-contrast="high"] .footer a{color:var(--theme-accent-2)!important}
+html[data-saq-contrast="high"] :is(.saq-language-switch button[aria-pressed="true"],.saq-about-step,.steps .current,.tab.selected,#scan-report .saq-cmp-tab[aria-selected="true"]){background:var(--theme-accent)!important;color:var(--theme-on-accent)!important}
+html[data-saq-contrast="high"] #scan-report .saq-cmp-mark{background:var(--theme-soft-2)!important}
+html[data-saq-contrast="high"] :where(input,textarea)::placeholder{color:var(--theme-muted);opacity:1}
+html[data-saq-contrast="high"] :where(button,a,input,textarea,select,summary,[tabindex]):focus-visible{outline:3px solid var(--theme-focus)!important;outline-offset:3px}
+
+/* 4) Wider spacing between lines, words and paragraphs */
+html[data-saq-spacing="wide"] body{line-height:1.85;word-spacing:.16em}
+html[data-saq-spacing="wide"] :is(p,li,dd,dt,td,th,label,small,blockquote,figcaption,textarea,input,select,.normtext,.quote,.notice,.check-note,.status,.saq-footer-note){line-height:1.85!important}
+html[data-saq-spacing="wide"] :is(h1,h2,h3,h4){line-height:1.4!important}
+html[data-saq-spacing="wide"] :is(main,footer,.saq-settings-panel) p:not(:last-child){margin-bottom:1.3em!important}
+html[data-saq-spacing="wide"] :is(main,footer) li+li{margin-top:.55em}
+
+/* 5) Underlined links, including the «Әділет» article links */
+html[data-saq-links="underline"] a:not(.logo){text-decoration-line:underline!important;text-decoration-thickness:max(1px,.08em)!important;text-underline-offset:.2em!important}
+
+/* 3) Animations off: the site setting reuses every «reduce motion» rule above; this is the safety net */
+html[data-saq-motion="reduce"]{scroll-behavior:auto!important}
+html[data-saq-motion="reduce"] *,html[data-saq-motion="reduce"] *::before,html[data-saq-motion="reduce"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+
+/* v26: scanner report — «Скачать отчёт (PDF)» and «Копировать отчёт» */
+#scan-report .saq-report-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--theme-border)}
+#scan-report .saq-report-actions .btn{min-height:44px}
+#scan-report .saq-report-copied{font-size:13px;font-weight:800;color:var(--theme-success-fg)}
+#scan-report .saq-report-copied.is-error{color:var(--theme-error-fg)}
+#scan-report .saq-report-copied:empty{display:none}
+#saq-print-report{display:none}
+@page{margin:15mm 14mm}
+@media print{
+ html.saq-printing{color-scheme:light only!important}
+ html.saq-printing,html.saq-printing body{background:#fff!important;color:#000!important;min-height:0!important;height:auto!important}
+ html.saq-printing body>*:not(#saq-print-report){display:none!important}
+ html.saq-printing #saq-print-report{display:block!important}
+ #saq-print-report{font:10.5pt/1.5 'DM Sans',Arial,Helvetica,sans-serif;color:#000;word-spacing:normal;-webkit-print-color-adjust:economy;print-color-adjust:economy}
+ #saq-print-report *{color:#000!important;background:transparent!important;box-shadow:none!important;text-shadow:none!important;animation:none!important;transition:none!important;filter:none!important;opacity:1!important}
+ #saq-print-report .pr-brand{font:900 13pt Georgia,serif;letter-spacing:-.5pt}
+ #saq-print-report h1{font:700 17pt/1.25 'Playfair Display',Georgia,serif;margin:2pt 0 8pt}
+ #saq-print-report h2{font:700 12.5pt/1.3 'Playfair Display',Georgia,serif;margin:14pt 0 6pt;padding-bottom:3pt;border-bottom:1pt solid #000;break-after:avoid;page-break-after:avoid}
+ #saq-print-report h3{font:700 11pt/1.35 Arial,Helvetica,sans-serif;margin:0 0 4pt;break-after:avoid;page-break-after:avoid}
+ #saq-print-report p{margin:0 0 4pt}
+ #saq-print-report .pr-head{padding-bottom:8pt;border-bottom:2pt solid #000}
+ #saq-print-report .pr-text{white-space:pre-wrap;overflow-wrap:anywhere;border:.75pt solid #000;border-radius:3pt;padding:6pt 8pt}
+ #saq-print-report .pr-summary{border-collapse:collapse;min-width:60%;break-inside:avoid}
+ #saq-print-report .pr-summary td{border:.75pt solid #000;padding:3pt 8pt}
+ #saq-print-report .pr-summary td:last-child{text-align:right;font-weight:700;width:40pt}
+ #saq-print-report .pr-claim{border:.75pt solid #000;border-radius:3pt;padding:7pt 9pt;margin:0 0 8pt;break-inside:avoid;page-break-inside:avoid}
+ #saq-print-report .pr-claim-text{font-style:italic}
+ #saq-print-report dl{display:grid;grid-template-columns:30% 1fr;gap:3pt 8pt;margin:4pt 0 0}
+ #saq-print-report dt{font-weight:700}
+ #saq-print-report dd{margin:0;overflow-wrap:anywhere}
+ #saq-print-report .pr-quote{white-space:pre-wrap;border-left:2pt solid #000;padding-left:6pt;margin-top:2pt}
+ #saq-print-report a{text-decoration:underline!important;overflow-wrap:anywhere}
+ #saq-print-report ul{margin:0;padding-left:16pt}
+ #saq-print-report .pr-foot{margin-top:14pt;padding-top:6pt;border-top:1pt solid #000;font-size:9pt}
+}
+
+/* v27: «✦ Помощник SAQ» — answers from a fixed list of questions about the site (not AI) */
+:root{--saq-h-strong:var(--theme-accent-2,#a5145a)}
+html[data-saq-theme="dark"]{--saq-h-strong:var(--theme-accent,#f16eac)}
+.saq-helper-launch{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:40;display:inline-flex;align-items:center;gap:7px;min-height:48px;padding:12px 18px;border:0;border-radius:999px;background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);font:800 14px/1.15 'DM Sans',Arial,sans-serif;box-shadow:0 0 0 3px var(--theme-bg,#fff),0 10px 26px rgba(80,14,44,.28);cursor:pointer;transition:transform .25s ease,opacity .25s ease,filter .2s ease}
+.saq-helper-launch:hover{filter:brightness(1.07)}
+.saq-helper-launch.is-tucked{transform:translateY(calc(100% + 30px));opacity:0;pointer-events:none}
+.saq-helper :focus-visible,.saq-helper-launch:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:2px}
+.saq-helper{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:84px;z-index:45;display:flex;flex-direction:column;width:min(390px,calc(100vw - 32px));height:min(560px,calc(100vh - 120px));border:1px solid var(--theme-border,#ebcbd9);border-radius:22px;background:var(--theme-surface,#fff);color:var(--theme-text,#4c2b3d);box-shadow:0 22px 60px rgba(40,6,24,.28);overflow:hidden}
+.saq-helper[hidden]{display:none!important}
+.saq-helper-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 12px 12px 18px;border-bottom:1px solid var(--theme-border,#ebcbd9);background:var(--theme-soft,#fff0f6)}
+.saq-helper-head h2{margin:0;font:700 17px/1.3 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031)}
+.saq-helper-head h2:focus:not(:focus-visible){outline:none}
+.saq-helper-close{flex:0 0 44px;width:44px;height:44px;border:1px solid var(--theme-border,#ebcbd9);border-radius:12px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font-size:24px;line-height:1;cursor:pointer}
+.saq-helper-close:hover{background:var(--theme-soft-2,#ffe1ed)}
+.saq-helper-log{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:14px}
+.saq-helper-msg{max-width:92%;padding:10px 12px;border-radius:14px;font-size:13.5px;line-height:1.55}
+.saq-helper-msg p{margin:0}
+.saq-helper-msg.is-bot{align-self:flex-start;background:var(--theme-soft,#fff0f6);border:1px solid var(--theme-border,#ebcbd9);color:var(--theme-text,#4c2b3d);border-bottom-left-radius:4px}
+.saq-helper-msg.is-user{align-self:flex-end;background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);border-bottom-right-radius:4px}
+.saq-helper-who{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.saq-helper-actions,.saq-helper-related{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.saq-helper-related>span{width:100%;font-size:12px;font-weight:800;color:var(--theme-muted,#755466)}
+.saq-helper-go,.saq-helper-link{display:inline-flex;align-items:center;min-height:38px;padding:7px 11px;border-radius:10px;font-size:12.5px;font-weight:800;line-height:1.25;text-decoration:none;cursor:pointer}
+.saq-helper-go{border:1px solid var(--saq-h-strong);background:var(--saq-h-strong);color:var(--theme-on-accent,#fff)}
+.saq-helper-link{border:1px solid var(--theme-border,#ebcbd9);background:var(--theme-surface,#fff);color:var(--saq-h-strong)}
+.saq-helper-chip{min-height:38px;padding:7px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:999px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font-size:12.5px;font-weight:700;line-height:1.25;text-align:left;cursor:pointer}
+.saq-helper-chip:hover,.saq-helper-link:hover{background:var(--theme-soft-2,#ffe1ed)}
+.saq-helper-chips{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;border-top:1px solid var(--theme-border,#ebcbd9);scrollbar-width:thin}
+.saq-helper-chips .saq-helper-chip{flex:0 0 auto;white-space:nowrap}
+.saq-helper-form{display:flex;gap:8px;padding:10px 12px 12px;border-top:1px solid var(--theme-border,#ebcbd9);background:var(--theme-surface,#fff)}
+.saq-helper-input{flex:1 1 auto;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:12px;background:var(--theme-bg,#fffdf9);color:var(--theme-text,#4c2b3d);font:16px/1.3 'DM Sans',Arial,sans-serif}
+.saq-helper-input::placeholder{color:var(--theme-muted,#755466);opacity:1}
+.saq-helper-send{flex:0 0 auto;min-height:44px;padding:10px 14px;border:0;border-radius:12px;background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);font-size:13px;font-weight:800;cursor:pointer}
+@media(max-width:760px){
+ .saq-helper-launch{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));min-height:46px;padding:11px 15px;font-size:13px}
+ html.saq-helper-open .saq-helper-launch{display:none}
+ .saq-helper{left:8px;right:8px;width:auto;bottom:calc(8px + var(--saq-kb,0px));height:min(600px,calc(var(--saq-vvh,100dvh) - 70px));border-radius:20px}
+}
+@media print{.saq-helper-launch,.saq-helper{display:none!important}}
+
+/* v28: «История проверок» in the scanner (stored only in this browser) */
+#scan-history{margin-top:26px;padding:22px;border:1px solid var(--theme-border);border-radius:22px;background:var(--theme-surface);color:var(--theme-text)}
+#scan-history .saq-history-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#scan-history .saq-history-head h3{margin:0;color:var(--theme-ink)}
+#scan-history .saq-history-head h3:focus:not(:focus-visible){outline:none}
+#scan-history .saq-history-note{margin:8px 0 0;font-size:13px;color:var(--theme-muted)}
+#scan-history .saq-history-off{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:var(--theme-warn-bg);color:var(--theme-warn-fg);font-size:13px;font-weight:700}
+#scan-history .saq-history-empty{margin:16px 0 0;padding:20px;border:1px dashed var(--theme-border);border-radius:14px;text-align:center;color:var(--theme-muted);font-weight:700}
+#scan-history .saq-history-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+#scan-history .saq-history-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--theme-border);border-radius:16px;background:var(--theme-soft)}
+#scan-history .saq-history-item time{font-size:12px;font-weight:800;letter-spacing:.02em;color:var(--theme-ink)}
+#scan-history .saq-history-case{margin:4px 0 8px;font-size:14px;line-height:1.45;color:var(--theme-text);overflow-wrap:anywhere}
+#scan-history .saq-history-stats{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+#scan-history .saq-hist-stat{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;border:1px solid var(--theme-border);background:var(--theme-surface);color:var(--theme-text);font-size:11.5px;font-weight:700}
+#scan-history .saq-hist-stat--confirmed{background:var(--theme-success-bg);color:var(--theme-success-fg)}
+#scan-history .saq-hist-stat--partial{background:var(--theme-warn-bg);color:var(--theme-warn-fg)}
+#scan-history .saq-hist-stat--contradicts{background:var(--theme-error-bg);color:var(--theme-error-fg)}
+#scan-history .saq-history-actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+#scan-history .saq-history-actions .btn,#scan-history .saq-history-foot .btn{min-height:40px}
+#scan-history .saq-history-foot{margin-top:14px}
+#scan-history .saq-history-foot:empty{display:none}
+#scan-history .saq-history-confirm{padding:14px 16px;border:1px solid var(--theme-error-fg);border-radius:14px;background:var(--theme-error-bg);color:var(--theme-error-fg)}
+#scan-history .saq-history-confirm p{margin:0 0 10px;font-weight:800}
+#scan-history .saq-history-confirm p:focus:not(:focus-visible){outline:none}
+#scan-history .saq-history-confirm-actions{display:flex;flex-wrap:wrap;gap:8px}
+#scan-history .saq-history-status{margin:10px 0 0;font-size:13px;font-weight:800;color:var(--theme-success-fg)}
+#scan-history .saq-history-status:empty{display:none}
+#scan-history .btn.secondary,#scan-history .btn.ghost,#scan-history .pill{color:var(--saq-h-strong)}
+#scan-history .btn.primary{background:var(--saq-h-strong);color:var(--theme-on-accent)}
+@media(max-width:760px){
+ #scan-history{padding:16px;border-radius:18px}
+ #scan-history .saq-history-item{grid-template-columns:minmax(0,1fr);gap:10px;padding:12px}
+ #scan-history .saq-history-actions{justify-content:flex-start}
+ #scan-history .saq-history-actions .btn,#scan-history .saq-history-foot .btn{min-height:44px;width:auto;flex:1 1 auto}
+ #scan-history .saq-history-confirm-actions .btn{flex:1 1 auto;width:auto}
+}
+@media print{#scan-history{display:none!important}}
+</style><script>if(/^https?:$/.test(location.protocol))document.documentElement.classList.add('saq-can-mask')</script><script>
+/* SAQ v25: accessibility settings (panel ⚙ → «Доступность»). Runs before the page is drawn, so nothing flashes. */
+(function(){
+ 'use strict';
+ var root=document.documentElement,KEY='saq-a11y';
+ var ATTR={text:['data-saq-text','large'],contrast:['data-saq-contrast','high'],motion:['data-saq-motion','reduce'],spacing:['data-saq-spacing','wide'],links:['data-saq-links','underline']};
+ var NAMES=Object.keys(ATTR),state={},listeners=[],originals=new WeakMap(),largeSheet=null;
+ try{var saved=JSON.parse(localStorage.getItem(KEY)||'{}');if(saved&&typeof saved==='object')NAMES.forEach(function(k){if(saved[k]===true)state[k]=true})}catch(_){}
+ var nativeMM=window.matchMedia?window.matchMedia.bind(window):null;
+ function userReduce(){return state.motion===true}
+ function reduceNow(){try{return userReduce()||(!!nativeMM&&nativeMM('(prefers-reduced-motion: reduce)').matches)}catch(_){return userReduce()}}
+
+ /* 1. Scripts that ask the browser about «reduce motion» also get the site setting. */
+ if(nativeMM){
+  window.matchMedia=function(query){
+   var mql=nativeMM(query);
+   if(!/prefers-reduced-motion/i.test(String(query)))return mql;
+   var wantsReduce=/prefers-reduced-motion\s*:\s*reduce/i.test(String(query));
+   var proxy={
+    media:mql.media,onchange:null,
+    get matches(){return wantsReduce?(mql.matches||userReduce()):(mql.matches&&!userReduce())},
+    addEventListener:function(type,fn){if(type!=='change'||typeof fn!=='function')return;listeners.push({proxy:proxy,fn:fn});try{mql.addEventListener('change',fn)}catch(_){try{mql.addListener(fn)}catch(__){}}},
+    removeEventListener:function(type,fn){listeners=listeners.filter(function(l){return l.fn!==fn});try{mql.removeEventListener('change',fn)}catch(_){try{mql.removeListener(fn)}catch(__){}}},
+    addListener:function(fn){proxy.addEventListener('change',fn)},
+    removeListener:function(fn){proxy.removeEventListener('change',fn)},
+    dispatchEvent:function(){return true}
+   };
+   return proxy;
+  };
+ }
+ function notifyMotion(){
+  listeners.forEach(function(l){try{l.fn.call(l.proxy,{type:'change',matches:l.proxy.matches,media:l.proxy.media})}catch(_){}});
+ }
+
+ /* 2. CSS written for «reduce motion» is switched on by the site setting as well. */
+ function motionMedia(text){
+  return text.split(',').map(function(m){
+   m=m.trim();
+   if(/prefers-reduced-motion\s*:\s*no-preference/i.test(m))return 'not all';
+   if(/prefers-reduced-motion\s*:\s*reduce/i.test(m)){
+    m=m.replace(/\s*and\s*\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/ig,'').replace(/\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)\s*and\s*/ig,'').replace(/\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/ig,'').trim();
+    return m||'all';
+   }
+   return m;
+  }).join(', ');
+ }
+ function eachSheetRule(fn){
+  var sheets=document.styleSheets;
+  for(var i=0;i<sheets.length;i++){var rules;try{rules=sheets[i].cssRules}catch(_){continue}if(rules)walk(rules)}
+  function walk(list){for(var j=0;j<list.length;j++){var r=list[j];fn(r);if(r.cssRules)walk(r.cssRules)}}
+ }
+ function syncMotionCSS(){
+  eachSheetRule(function(r){
+   if(!(window.CSSMediaRule&&r instanceof CSSMediaRule))return;
+   var orig=originals.get(r);
+   if(orig===undefined){orig=r.media.mediaText;if(!/prefers-reduced-motion/i.test(orig))return;originals.set(r,orig)}
+   var want=userReduce()?motionMedia(orig):orig;
+   if(r.media.mediaText!==want){try{r.media.mediaText=want}catch(_){}}
+  });
+ }
+ /* Smooth scrolling is motion too. */
+ function calm(o){return (o&&typeof o==='object'&&o.behavior==='smooth'&&reduceNow())?Object.assign({},o,{behavior:'auto'}):o}
+ ['scrollTo','scrollBy'].forEach(function(name){
+  var w=window[name];if(typeof w==='function')window[name]=function(a,b){return (a&&typeof a==='object')?w.call(window,calm(a)):w.call(window,a,b)};
+  var e=Element.prototype[name];if(typeof e==='function')Element.prototype[name]=function(a,b){return (a&&typeof a==='object')?e.call(this,calm(a)):e.call(this,a,b)};
+ });
+ var siv=Element.prototype.scrollIntoView;
+ if(typeof siv==='function')Element.prototype.scrollIntoView=function(a){return siv.call(this,(a&&typeof a==='object')?calm(a):a)};
+
+ /* 3. Large text: every font size of the site ×1.2, layout widths stay as they are. */
+ function scaled(v){
+  v=String(v||'').trim();
+  if(!v||/var\(|%|(^|[^r])em\b|inherit|initial|unset|revert/i.test(v))return null;
+  if(!/(px|rem|vw|vh|vmin|vmax)\b/i.test(v))return null;
+  return 'calc('+v+' * 1.2)';
+ }
+ function buildLargeText(){
+  var out=[];
+  function walk(list,open,close){
+   for(var i=0;i<list.length;i++){
+    var r=list[i];
+    if(window.CSSStyleRule&&r instanceof CSSStyleRule){
+     var nv=scaled(r.style.getPropertyValue('font-size'));
+     if(nv)out.push(open+r.selectorText+'{font-size:'+nv+(r.style.getPropertyPriority('font-size')?' !important':'')+'}'+close);
+    }else if(window.CSSMediaRule&&r instanceof CSSMediaRule){
+     walk(r.cssRules,open+'@media '+(originals.get(r)||r.media.mediaText)+'{','}'+close);
+    }else if(window.CSSSupportsRule&&r instanceof CSSSupportsRule){
+     walk(r.cssRules,open+'@supports '+r.conditionText+'{','}'+close);
+    }
+   }
+  }
+  var sheets=document.styleSheets;
+  for(var i=0;i<sheets.length;i++){var s=sheets[i];if(s.ownerNode&&s.ownerNode.id==='saq-a11y-large-text')continue;var rules;try{rules=s.cssRules}catch(_){continue}if(rules)walk(rules,'','')}
+  if(!largeSheet){largeSheet=document.createElement('style');largeSheet.id='saq-a11y-large-text';(document.head||root).appendChild(largeSheet)}
+  largeSheet.textContent=out.join('\n');
+ }
+
+ function apply(){
+  NAMES.forEach(function(k){if(state[k])root.setAttribute(ATTR[k][0],ATTR[k][1]);else root.removeAttribute(ATTR[k][0])});
+  if(state.text&&!largeSheet)buildLargeText();
+  if(largeSheet)largeSheet.media=state.text?'all':'not all';
+ }
+ function save(){try{var o={};NAMES.forEach(function(k){if(state[k])o[k]=true});if(Object.keys(o).length)localStorage.setItem(KEY,JSON.stringify(o));else localStorage.removeItem(KEY)}catch(_){/* private mode: works for this visit */}}
+ function set(name,on){
+  if(!ATTR[name])return;
+  var before=userReduce();
+  if(on)state[name]=true;else delete state[name];
+  save();apply();
+  if(before!==userReduce()){syncMotionCSS();notifyMotion()}
+ }
+ window.SAQA11y={
+  get:function(){var o={};NAMES.forEach(function(k){o[k]=!!state[k]});return o},
+  set:set,
+  reset:function(){var before=userReduce();state={};save();apply();if(before){syncMotionCSS();notifyMotion()}},
+  reducedMotion:reduceNow
+ };
+ apply();
+ if(userReduce())syncMotionCSS();
+ document.addEventListener('DOMContentLoaded',function(){if(userReduce())syncMotionCSS();if(state.text)buildLargeText()});
+})();
+</script></head><body>
+<header class="header"><div class="shell nav"><a href="#home" class="logo" data-route="home">SAQ<span>✦</span></a><nav id="navlinks" class="navlinks" aria-label="Основная навигация"><button class="navlink" data-route="home">Главная</button><button class="navlink" data-route="check">Экспресс-проверка</button><button class="navlink" data-route="scanner">Правовой сканер</button><button class="navlink" data-route="practice">Юрпрактика</button><button class="navlink" data-route="about">О проекте</button></nav><div class="saq-language-switch" role="group" aria-label="Язык интерфейса"><button type="button" data-saq-lang="ru" aria-pressed="true" lang="ru" title="Русский">RU</button><button type="button" data-saq-lang="kk" aria-pressed="false" lang="kk" title="Қазақша">ҚАЗ</button><button type="button" data-saq-lang="en" aria-pressed="false" lang="en" title="English">EN</button></div><div class="saq-settings-wrap" id="saq-settings-wrap"><button type="button" id="saq-settings-toggle" class="saq-settings-trigger" aria-label="Настройки оформления" title="Настройки оформления" aria-expanded="false" aria-controls="saq-settings-panel">⚙</button><aside class="saq-settings-panel" id="saq-settings-panel" aria-label="Настройки оформления" hidden><h2>Оформление ✦</h2><p class="saq-settings-hint">Выберите удобную тему и цветовую схему.</p><span class="saq-settings-label">Тема</span><div class="saq-settings-modes" role="group" aria-label="Тема оформления"><button type="button" class="saq-mode-choice" data-saq-mode="light" aria-pressed="true">☀ Светлая</button><button type="button" class="saq-mode-choice" data-saq-mode="dark" aria-pressed="false">☾ Тёмная</button></div><span class="saq-settings-label">Цветовая схема</span><div class="saq-settings-schemes" role="group" aria-label="Цветовая схема"><button type="button" class="saq-settings-choice" data-saq-scheme="barbie" aria-pressed="true"><span><span class="saq-settings-swatch" style="--swatch-a:#e91c79;--swatch-b:#fff5fa"></span>Barbie Pink</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="burgundy" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8f234e;--swatch-b:#fff7ed"></span>Burgundy</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="lavender" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8153bc;--swatch-b:#ffe9f3"></span>Lavender</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="rose-gold" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#a94770;--swatch-b:#e8bc89"></span>Rose Gold</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button></div><div class="saq-a11y" id="saq-a11y"><span class="saq-settings-label" id="saq-a11y-title">Доступность</span><div class="saq-a11y-list" role="group" aria-labelledby="saq-a11y-title"><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="text"><span>Крупный текст</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="contrast"><span>Высокий контраст</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="motion"><span>Отключить анимации</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="spacing"><span>Увеличенные интервалы</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="links"><span>Подчёркивать ссылки</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button></div><button type="button" class="saq-a11y-reset">Сбросить настройки доступности</button><p class="saq-a11y-status" role="status" aria-live="polite"></p></div><div class="saq-a11y saq-history-setting"><span class="saq-settings-label" id="saq-history-set-title">История</span><div class="saq-a11y-list" role="group" aria-labelledby="saq-history-set-title"><button type="button" class="saq-a11y-switch" role="switch" aria-checked="true" id="saq-history-toggle"><span>Сохранять историю проверок</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button></div></div><div class="saq-settings-footer">Выбор сохраняется на этом устройстве автоматически.</div></aside></div><button id="menu" class="menu" aria-expanded="false" aria-controls="navlinks" aria-label="Открыть меню">☰</button></div></header>
 <main>
 <section id="home" class="page active" style="padding-top:0"><div class="hero"><div class="shell"><div class="hero-copy"><div class="eyebrow">✦ LegalTech · Гражданское право РК</div><h1 aria-label="SAQ — проверь, прежде чем доверять ИИ."><span class="hero-word hero-word-brand" aria-hidden="true" style="--word-index:0">SAQ</span> <span class="hero-word" aria-hidden="true" style="--word-index:1">—</span> <span class="hero-word" aria-hidden="true" style="--word-index:2">проверь,</span> <span class="hero-word" aria-hidden="true" style="--word-index:3">прежде</span> <span class="hero-word" aria-hidden="true" style="--word-index:4">чем</span> <span class="hero-word hero-word-accent" aria-hidden="true" style="--word-index:5">доверять</span> <span class="hero-word hero-word-accent" aria-hidden="true" style="--word-index:6">ИИ.</span></h1><p>Образовательная платформа для проверки юридической информации, анализа ответов искусственного интеллекта и развития правового мышления.</p><div class="actions"><button class="btn primary" data-route="check">Начать проверку ↗</button><button class="btn secondary" data-route="about">Узнать о проекте</button></div></div><div class="hero-visual"><div class="heroimage saq-hero-built saq-hero-stage" role="img" aria-label="Декоративная иллюстрация: Фемида на фоне здания суда"><div class="saq-stage-bg" aria-hidden="true"><div class="saq-stage-bg-parallax"><img loading="lazy" decoding="async" src="hero_scene_bg.jpg" alt="" draggable="false" decoding="async"/></div><span class="saq-stage-rays"></span><span class="saq-stage-sweep"></span></div><svg class="saq-stage-arcs" viewBox="0 0 852 704" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="saqArcGold" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#e9c089" stop-opacity="0"/><stop offset=".25" stop-color="#d9a866"/><stop offset=".7" stop-color="#f3d7a6"/><stop offset="1" stop-color="#e9c089" stop-opacity="0"/></linearGradient></defs><path class="saq-arc" d="M-260 244C-120 170 200 92 470 120" pathLength="1"/><path class="saq-arc saq-arc-2" d="M714 312C716 246 768 186 852 168" pathLength="1"/><path class="saq-arc-glint" d="M-260 244C-120 170 200 92 470 120" pathLength="1"/><path class="saq-arc-glint saq-arc-2" d="M714 312C716 246 768 186 852 168" pathLength="1"/></svg><div class="saq-stage-motes" aria-hidden="true"><i style="--x:22%;--y:78%;--d:0s;--t:9s"></i><i style="--x:31%;--y:66%;--d:2.1s;--t:11s"></i><i style="--x:45%;--y:84%;--d:4.3s;--t:10s"></i><i style="--x:56%;--y:72%;--d:1.2s;--t:12s"></i><i style="--x:28%;--y:90%;--d:5.5s;--t:9.5s"></i><i style="--x:64%;--y:62%;--d:3.4s;--t:11.5s"></i><i style="--x:18%;--y:60%;--d:6.6s;--t:10.5s"></i><i style="--x:50%;--y:52%;--d:7.7s;--t:12.5s"></i></div><div class="saq-themis-rig saq-themis-hd" aria-hidden="true"><div class="saq-themis-inner"><span class="saq-themis-backlight"></span><span class="saq-themis-beam"></span><div class="saq-themis-layer saq-tr-body"><img loading="lazy" decoding="async" src="themis_hd_body.webp" alt="" draggable="false" decoding="async" fetchpriority="high"/><i class="saq-themis-sheen"></i></div><div class="saq-themis-layer saq-tr-pan saq-tr-pan-l"><img loading="lazy" decoding="async" src="themis_hd_pan_left.webp" alt="" draggable="false" decoding="async"/><i class="saq-themis-sheen"></i><b class="saq-themis-glint saq-glint-pan"></b></div><div class="saq-themis-layer saq-tr-pan saq-tr-pan-r"><img loading="lazy" decoding="async" src="themis_hd_pan_right.webp" alt="" draggable="false" decoding="async"/><i class="saq-themis-sheen"></i></div><b class="saq-themis-glint saq-glint-top"></b><b class="saq-themis-glint saq-glint-sword"></b></div></div><div class="saq-stage-sparks" aria-hidden="true"><span class="saq-stage-spark is-pink" style="--x:14%;--y:34%;--s:30px;--d:0s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-pink" style="--x:4%;--y:82%;--s:22px;--d:1.6s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-gold" style="--x:40%;--y:12%;--s:16px;--d:0.8s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-gold" style="--x:71%;--y:7%;--s:14px;--d:2.4s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-gold" style="--x:36%;--y:64%;--s:12px;--d:3.2s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span></div></div></div></div></div></div><div class="shell"><section class="section"><div class="sectionhead"><div class="eyebrow">01 / Возможности</div><h2>Три инструмента для правового мышления</h2><p>От самостоятельной проверки ответа ИИ — к поиску норм и разбору учебных ситуаций.</p></div><div class="grid3"><article class="card feature"><div class="iconbox">ϟ</div><h3>Экспресс-проверка</h3><p>Семь критериев для самостоятельной проверки достоверности ответа ИИ.</p><button class="btn primary small" data-route="check">Перейти ↗</button></article><article class="card feature"><div class="iconbox">⌕</div><h3>Правовой сканер</h3><p>Поиск по внутренней базе ГК РК; анализ через ИИ включается после настройки API.</p><button class="btn primary small" data-route="scanner">Перейти ↗</button></article><article class="card feature"><div class="iconbox">⚖</div><h3>Юрпрактика</h3><p>Учебные упражнения на поиск неподтверждённых утверждений и письменное обоснование своей позиции.</p><button class="btn primary small" data-route="practice">Перейти ↗</button></article></div></section><section class="section"><div class="aboutquote">«Искусственный интеллект может помогать юристу, но ответственность за юридический анализ требует проверки информации».</div></section></div></section>
 <section id="check" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 01 / Самостоятельная оценка</div><h2>ϟ Экспресс-проверка</h2><p>Оцените ответ ИИ по семи критериям. Здесь вы отмечаете результаты <b>собственной</b> проверки, а не получаете автоматическое экспертное заключение.</p></div><div class="pagebadge">☑</div></div><div class="card criteria" id="criteria"></div><div class="actions"><button class="btn secondary" id="check-reset">↻ Пройти проверку заново</button></div><div id="check-output" class="result show" role="status" aria-live="polite" aria-atomic="true"></div></section>
-<section id="scanner" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 02 / Проверка по загруженному ГК РК</div><h2>⌕ Правовой сканер</h2><p>Введите учебный гражданско-правовой кейс и ответ искусственного интеллекта. Сопоставление выполняется только с загруженным ГК РК (Особенная часть).</p></div><div class="pagebadge">⌕</div></div><div id="scan-source-panel" class="saq-src" aria-live="polite"><div class="saq-src-icon" aria-hidden="true">§</div><div class="saq-src-body"><p class="saq-src-text" data-saq-no-translate>Нормативная база: ГК РК (Особенная часть) — загрузка сведений…</p><p class="saq-src-mode" data-saq-no-translate hidden></p></div></div><div class="grid2"><div class="field"><label for="case">01 — Описание гражданско-правового кейса</label><textarea id="case" maxlength="5000" placeholder="Опишите обстоятельства дела: стороны, договор, спорный вопрос…"></textarea><small id="case-count">0 / 5000 символов</small></div><div class="field"><label for="ai">02 — Ответ, полученный от ИИ</label><textarea id="ai" maxlength="10000" placeholder="Вставьте текст ответа ИИ, который необходимо проверить…"></textarea><small id="ai-count">0 / 10000 символов</small></div></div><div class="actions"><button id="scan-btn" class="btn primary">Проверить ↗</button><button id="scan-clear" class="btn secondary">Очистить</button></div><div class="saq-examples"><span class="saq-examples-label">Проверить на готовом примере:</span><button type="button" class="saq-example-btn" data-saq-example="errors">Ответ с ошибками</button><button type="button" class="saq-example-btn" data-saq-example="missing">Несуществующие статьи</button><button type="button" class="saq-example-btn" data-saq-example="good">Верный ответ</button></div><div id="scan-info" class="status" role="status" data-saq-no-translate></div><div id="scan-report" class="resultbox" aria-live="polite" data-saq-no-translate></div><section class="section"><div class="card scanner-runner-card" style="background:#fff1f7"><h3>Как работает проверка</h3><div class="scanner-runner" aria-label="Этапы проверки"><div class="scanner-runner-track"><div class="saq-runner-group"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div><div class="saq-runner-group" aria-hidden="true"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div></div></div><div class="tags" style="margin-top:24px"><span class="tag">Подтверждено</span><span class="tag">Частично подтверждено</span><span class="tag">Не соответствует норме</span><span class="tag">Не удалось подтвердить</span></div></div></section></section>
+<section id="scanner" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 02 / Проверка по загруженному ГК РК</div><h2>⌕ Правовой сканер</h2><p>Введите учебный гражданско-правовой кейс и ответ искусственного интеллекта. Сопоставление выполняется только с загруженным ГК РК (Особенная часть).</p></div><div class="pagebadge">⌕</div></div><div id="scan-source-panel" class="saq-src" aria-live="polite"><div class="saq-src-icon" aria-hidden="true">§</div><div class="saq-src-body"><p class="saq-src-text" data-saq-no-translate>Нормативная база: ГК РК (Особенная часть) — загрузка сведений…</p><p class="saq-src-mode" data-saq-no-translate hidden></p></div></div><div class="grid2"><div class="field"><label for="case">01 — Описание гражданско-правового кейса</label><textarea id="case" maxlength="5000" placeholder="Опишите обстоятельства дела: стороны, договор, спорный вопрос…"></textarea><small id="case-count">0 / 5000 символов</small></div><div class="field"><label for="ai">02 — Ответ, полученный от ИИ</label><textarea id="ai" maxlength="10000" placeholder="Вставьте текст ответа ИИ, который необходимо проверить…"></textarea><small id="ai-count">0 / 10000 символов</small></div></div><div class="actions"><button id="scan-btn" class="btn primary">Проверить ↗</button><button id="scan-clear" class="btn secondary">Очистить</button></div><div class="saq-examples"><span class="saq-examples-label">Проверить на готовом примере:</span><button type="button" class="saq-example-btn" data-saq-example="errors">Ответ с ошибками</button><button type="button" class="saq-example-btn" data-saq-example="missing">Несуществующие статьи</button><button type="button" class="saq-example-btn" data-saq-example="good">Верный ответ</button></div><div id="scan-info" class="status" role="status" data-saq-no-translate></div><div id="scan-report" class="resultbox" aria-live="polite" data-saq-no-translate></div><section id="scan-history" class="saq-history" data-saq-no-translate></section><section class="section"><div class="card scanner-runner-card" style="background:#fff1f7"><h3>Как работает проверка</h3><div class="scanner-runner" aria-label="Этапы проверки"><div class="scanner-runner-track"><div class="saq-runner-group"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div><div class="saq-runner-group" aria-hidden="true"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div></div></div><div class="tags" style="margin-top:24px"><span class="tag">Подтверждено</span><span class="tag">Частично подтверждено</span><span class="tag">Не соответствует норме</span><span class="tag">Не удалось подтвердить</span></div></div></section></section>
 <section id="practice" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 03 / Обучение</div><h2>⚖ Юрпрактика</h2><p>Разбирайте конкретные учебные ситуации, сравнивайте ошибочные ответы ИИ с дословными выдержками из загруженного ГК РК и аргументируйте выводы.</p></div><div class="pagebadge">⚖</div></div><div id="practice-list"><div class="sectionhead"><h3>Выберите учебную ситуацию</h3><p>После выбора прочитайте обстоятельства, найдите проблему в ответе ИИ, предложите план проверки и изучите методический разбор.</p></div><div class="exercise-list" id="exercises"></div></div><div id="practice-work" class="hide"><div class="steps"><span class="current">1 · Ситуация</span><span>2 · Анализ ответа</span><span>3 · Ваше обоснование</span><span>4 · Разбор</span></div><div class="card"><div class="eyebrow" id="ex-tag">Практический кейс</div><h3 id="ex-title"></h3><p id="ex-case"></p><div style="margin-top:24px"><h3>Ответ ИИ для анализа</h3><div class="quote" id="ex-ai"></div><p class="saq-ex-links" id="ex-ai-links" data-saq-no-translate hidden></p></div><div class="field" style="margin-top:23px"><label for="ex-error">Какую ошибку или проблему вы видите?</label><select id="ex-error"><option value="">Выберите категорию</option><option>Несуществующая статья</option><option>Неправильный номер статьи</option><option>Искажённое содержание нормы</option><option>Неправильное толкование</option><option>Неправильное применение нормы к обстоятельствам дела</option><option>Неподтверждённое юридическое утверждение</option></select></div><div class="saq-case-reference"><label for="ex-article">Какая статья из загруженного ГК РК помогает проверить утверждение?</label><select id="ex-article"><option value="">Выберите статью</option><option value="407">Статья 407 · Условие договора о товаре</option><option value="408">Статья 408 · Передача товара</option><option value="428">Статья 428 · Ненадлежащее качество</option><option value="440">Статья 440 · Предварительная оплата</option></select><small>Статьи взяты из внутренней нормативной базы. Сравнение выполняется после отправки.</small></div><div class="saq-case-tip" id="ex-tip"></div><div class="field"><label for="ex-reason">Что именно нужно проверить и почему?</label><textarea id="ex-reason" style="min-height:115px" placeholder="Объясните, какая информация отсутствует и как проверить вывод…"></textarea></div><div class="field"><label for="ex-solution">Предложите норму или план решения</label><textarea id="ex-solution" style="min-height:115px" placeholder="Укажите проверенный источник или объясните, какие нормы и факты нужно сначала установить. Не придумывайте статьи."></textarea></div><div class="actions"><button id="ex-submit" class="btn primary">Отправить и открыть разбор</button><button id="ex-back" class="btn secondary">← К списку</button></div><div id="ex-message" class="status" aria-live="polite"></div></div><div id="ex-feedback" class="result"></div></div></section>
 
 <section id="about" class="page shell"><div class="pagehead"><div><div class="eyebrow">О проекте / Наша миссия</div><h2>О проекте SAQ<span style="color:var(--pink)">✦</span></h2><p>Образовательная LegalTech-платформа для ответственного использования искусственного интеллекта при изучении гражданского права Казахстана.</p></div><div class="pagebadge">✦</div></div><div class="aboutquote">«Искусственный интеллект может помогать юристу, но ответственность за юридический анализ требует проверки информации».</div><div class="saq-about-horizontal-stage" id="saq-about-horizontal-stage" aria-label="Четыре темы о проекте"><div class="saq-about-scroll-head"><span class="saq-about-scroll-hint">↔ Листайте горизонтально · Shift + скролл</span><div class="saq-about-scroll-actions" aria-label="Листать карточки"><button type="button" class="saq-about-arrow" id="saq-about-prev" aria-label="Предыдущая карточка">←</button><span id="saq-about-position" class="saq-about-position" aria-live="polite">1 / 4</span><button type="button" class="saq-about-arrow" id="saq-about-next" aria-label="Следующая карточка">→</button></div></div><div class="saq-about-horizontal-pin" tabindex="0" role="region" aria-label="Горизонтальная лента о проекте. Используйте Shift и колёсико, стрелки либо жест вправо или влево."><div class="grid2 saq-about-horizontal-track"><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">01</span><span class="saq-about-kicker">Основа платформы</span></div><div class="saq-about-panel-head"><div class="iconbox">◎</div><div class="saq-about-mini-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Что такое SAQ?</h3><p>Учебная среда, в которой студенты учатся различать убедительно звучащие, но неподтверждённые утверждения и правовые выводы, подкреплённые первоисточниками.</p><div class="saq-about-chipline"><span>Critical reading</span><span>LegalTech</span><span>Self-check</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">02</span><span class="saq-about-kicker">Проблема проекта</span></div><div class="saq-about-panel-head"><div class="iconbox">!</div><div class="saq-about-mini-bars" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Какую проблему решаем?</h3><p>ИИ может ошибаться в ссылках на статьи, содержании норм и их применении. SAQ помогает замечать такие риски и выстраивать проверяемую аргументацию.</p><div class="saq-about-chipline"><span>Ошибки ссылок</span><span>Толкование</span><span>Проверяемость</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">03</span><span class="saq-about-kicker">Кому полезно</span></div><div class="saq-about-panel-head"><div class="iconbox">♙</div><div class="saq-about-mini-users" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Для кого платформа?</h3><p>Для студентов юридических специальностей, изучающих гражданское право, начинающих исследователей и преподавателей.</p><div class="saq-about-chipline"><span>Студенты</span><span>Исследователи</span><span>Преподаватели</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">04</span><span class="saq-about-kicker">Нормативная опора</span></div><div class="saq-about-panel-head"><div class="iconbox">▤</div><div class="saq-about-mini-source" aria-hidden="true"><span></span><span></span></div></div><h3>Нормативный источник</h3><p>Гражданский кодекс Республики Казахстан (Особенная часть) от 1 июля 1999 года № 409-I. <a href="https://adilet.zan.kz/rus/docs/K990000409_" target="_blank" rel="noopener noreferrer">ИПС «Әділет» — официальный текст ↗</a>. Внутренняя база SAQ составлена из предоставленного DOCX системы «ПАРАГРАФ» с редакцией по состоянию на 21.10.2026.</p><div class="saq-about-chipline"><span>Первоисточник</span><span>Статьи и пункты</span><span>Редакция</span></div></div></div><div class="saq-about-horizontal-progress" aria-hidden="true"><span></span></div></div></div><section class="section saq-about-problem"><div class="strip"><div class="card"><div class="icon">⚠</div><div><strong>В чём проблема?</strong><p>ИИ может уверенно ссылаться на несуществующие статьи, путать нормы и неправильно применять право к учебному кейсу.</p></div></div><div class="card"><div class="icon">◎</div><div><strong>Что делает SAQ?</strong><p>Помогает отделять подтверждённые правовые сведения от неподтверждённых утверждений и формировать привычку проверять источник.</p></div></div></div></section><section class="section saq-about-modules"><div class="sectionhead"><h2>Как работают инструменты</h2></div><div class="saq-about-scroll-stage" id="saq-about-scroll-stage"><div class="saq-about-orb-panel" aria-hidden="true"><div class="saq-about-orb"><span class="saq-orb-core">✦</span></div><div class="saq-orb-caption">От вопроса — к проверенному выводу</div></div><div class="grid3 saq-about-scroll-deck"><div class="card"><h3>01 · Экспресс-проверка</h3><p>Вы самостоятельно оцениваете семь признаков надёжного ответа, после чего видите сводку своих отметок.</p></div><div class="card"><h3>02 · Правовой сканер</h3><p>Делит ответ ИИ на утверждения, находит статьи ГК РК, показывает дословные цитаты и сравнение «ответ ↔ закон» со ссылками на «Әділет».</p></div><div class="card"><h3>03 · Юрпрактика</h3><p>Учебные задания помогают распознавать бездоказательные выводы и составлять собственный план правовой проверки.</p></div></div></div></section><section class="section"><div class="card saq-learning-outcomes"><h3>Ожидаемые образовательные результаты</h3><p>Критическая оценка текста ИИ; умение запрашивать проверяемые ссылки; поиск и сверка статей и пунктов; внимательное чтение нормы; самостоятельный анализ кейса; ответственное обращение с юридической информацией.</p><button class="btn primary small" data-route="check">Попробовать экспресс-проверку ↗</button></div></section></section>
@@ -1104,6 +1391,20 @@ $('#ex-feedback').classList.add('show');$('#next-ex').onclick=()=>currentEx<exer
  document.addEventListener('pointerdown',e=>{if(!panel.hidden&&!wrapper.contains(e.target))setOpen(false)});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){setOpen(false);trigger.focus()}});
  apply();
+})();
+</script>
+<script>
+/* SAQ v25: «Доступность» switches in the ⚙ panel. */
+(function(){
+ 'use strict';
+ const api=window.SAQA11y, box=document.getElementById('saq-a11y');
+ if(!api||!box)return;
+ const status=box.querySelector('.saq-a11y-status');
+ const switches=Array.from(box.querySelectorAll('[data-saq-a11y]'));
+ function render(){const s=api.get();switches.forEach(b=>b.setAttribute('aria-checked',String(!!s[b.dataset.saqA11y])))}
+ switches.forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.saqA11y;api.set(k,!api.get()[k]);if(status)status.textContent='';render()}));
+ box.querySelector('.saq-a11y-reset').addEventListener('click',()=>{api.reset();render();if(status)status.textContent='Настройки доступности сброшены.'});
+ render();
 })();
 </script>
 
@@ -1283,4 +1584,5 @@ $('#ex-feedback').classList.add('show');$('#next-ex').onclick=()=>currentEx<exer
 <script src="law/adilet_anchors.js" defer></script>
 <script src="saq_scanner_ui.js" defer></script>
 <script src="saq_i18n.js" defer></script>
+<script src="saq_helper.js" defer></script>
 </body></html>

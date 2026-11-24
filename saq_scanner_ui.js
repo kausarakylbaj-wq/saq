@@ -284,6 +284,276 @@
       notFound: 'The excerpt could not be highlighted automatically — compare the text manually.', claim: (n) => `Claim ${n}`, goto: 'Compare with the law ↑', other: 'Other claims' },
   };
   const C = () => CMP[lang()];
+
+  /* ------------------------------------------- report: PDF and copy (v26) */
+  const REP = {
+    ru: { title: 'Отчёт SAQ о проверке ответа ИИ', checkedAt: 'Дата и время проверки', caseH: 'Кейс', answerH: 'Ответ ИИ', summaryH: 'Сводка', total: (n) => `Всего утверждений: ${n}`,
+      claimsH: 'Утверждения', status: 'Статус', cited: 'Статья из ответа ИИ', norm: 'Норма из базы', noQuote: 'Цитаты нет: подтверждающая норма в ГК РК (Особенная часть) не найдена.',
+      links: 'Ссылки на «Әділет»', linkWord: '«Әділет»', missingH: 'Статьи из ответа, которых нет в ГК РК (Особенная часть)', missingNone: 'Таких статей нет: все статьи из ответа есть в ГК РК (Особенная часть).',
+      pdf: 'Скачать отчёт (PDF)', copy: 'Копировать отчёт', copied: 'Скопировано', copyFail: 'Не удалось скопировать. Откройте отчёт PDF и скопируйте текст оттуда.', file: 'SAQ_отчёт',
+      srcFallback: 'Источник для сверки: Гражданский кодекс Республики Казахстан (Особенная часть) от 1 июля 1999 года № 409-I — ИПС «Әділет»' },
+    kk: { title: 'SAQ: ЖИ жауабын тексеру есебі', checkedAt: 'Тексерілген күні мен уақыты', caseH: 'Жағдай (кейс)', answerH: 'ЖИ жауабы', summaryH: 'Қорытынды', total: (n) => `Барлық тұжырым: ${n}`,
+      claimsH: 'Тұжырымдар', status: 'Мәртебе', cited: 'ЖИ жауабындағы бап', norm: 'Базадағы норма', noQuote: 'Дәйексөз жоқ: ҚР АК-де (Ерекше бөлім) растайтын норма табылмады.',
+      links: '«Әділет» сілтемелері', linkWord: '«Әділет»', missingH: 'Жауаптағы ҚР АК-де (Ерекше бөлім) жоқ баптар', missingNone: 'Ондай бап жоқ: жауаптағы барлық баптар ҚР АК-де (Ерекше бөлім) бар.',
+      pdf: 'Есепті жүктеу (PDF)', copy: 'Есепті көшіру', copied: 'Көшірілді', copyFail: 'Көшіру мүмкін болмады. PDF есепті ашып, мәтінді сол жерден көшіріңіз.', file: 'SAQ_есеп',
+      srcFallback: 'Салыстыру көзі: Қазақстан Республикасының Азаматтық кодексі (Ерекше бөлім), 1999 жылғы 1 шілдедегі № 409-I — «Әділет» АҚЖ' },
+    en: { title: 'SAQ report: checking an AI answer', checkedAt: 'Date and time of the check', caseH: 'Case', answerH: 'AI answer', summaryH: 'Summary', total: (n) => `Claims checked: ${n}`,
+      claimsH: 'Claims', status: 'Status', cited: 'Article cited in the AI answer', norm: 'Provision in the database', noQuote: 'No quotation: no supporting provision was found in the Civil Code (Special Part).',
+      links: 'Links to Adilet', linkWord: 'Adilet', missingH: 'Articles from the answer that are not in the Civil Code (Special Part)', missingNone: 'None: every article cited in the answer is in the Civil Code (Special Part).',
+      pdf: 'Download report (PDF)', copy: 'Copy report', copied: 'Copied', copyFail: 'Could not copy. Open the PDF report and copy the text from there.', file: 'SAQ_report',
+      srcFallback: 'Source for checking: Civil Code of the Republic of Kazakhstan (Special Part) of 1 July 1999 No. 409-I — Adilet legal information system' },
+  };
+  const R = () => REP[lang()];
+  const STATUS_MARK = { confirmed: '✓', partial: '◐', contradicts: '✗', unverified: '?' };
+  const two = (n) => String(n).padStart(2, '0');
+  const stamp = (d) => `${two(d.getDate())}.${two(d.getMonth() + 1)}.${d.getFullYear()}, ${two(d.getHours())}:${two(d.getMinutes())}`;
+  const plain = (html) => { const el = document.createElement('div'); el.innerHTML = html; return el.textContent.replace(/\s+/g, ' ').trim(); };
+  function refText(r) {
+    const L = t(); const parts = [];
+    if (r.sub) parts.push(L.sub(r.sub));
+    if (r.clause) parts.push(L.clause(r.clause));
+    parts.push(L.art(r.article));
+    return `${parts.join(' ')} ${r.act ? actName(r.act) : L.gk} — ${L.refState[r.state] || ''}`;
+  }
+  function normOf(article, clause, title, quote, fragment) {
+    const L = t();
+    return { head: `${L.art(article)}${clause ? ', ' + L.clause(clause) : ''} — ${title || ''}`, quote: quote || '', fragment: !!fragment, article: String(article), url: adiletUrl(article) };
+  }
+  // The footer as it is on the page right now (already in the chosen language).
+  function footerInfo() {
+    const box = document.querySelector('footer .saq-footer-src');
+    const a = box && box.querySelector('a');
+    const first = box && box.firstElementChild;
+    const source = first ? first.textContent.replace(/\s*↗\s*$/, '').replace(/\s+/g, ' ').trim() : R().srcFallback;
+    const notes = box ? Array.from(box.querySelectorAll('.saq-footer-note')).map((n) => n.textContent.replace(/\s+/g, ' ').trim()) : [];
+    return { source, url: (a && a.href) || ADILET_DOC, notes };
+  }
+  function reportModel(ctx) {
+    ctx = ctx || state;
+    const r = ctx.report; if (!r) return null;
+    const L = t(); const K = C(); const m = sourceMeta();
+    const aiById = new Map((ctx.ai && ctx.ai.results || []).map((x) => [x.id, x]));
+    const claims = r.claims.map((c) => {
+      const ai = aiById.get(c.id); const useAi = aiUsable(ai);
+      const status = useAi ? ai.status : c.status;
+      let norm = null;
+      if (useAi && ai.quote) norm = normOf(ai.article, ai.clause, ai.title, ai.quote, false);
+      else if (c.target) norm = normOf(c.target.article, c.target.clause, c.target.title, c.target.quote, c.target.fragment);
+      let suggested = null;
+      if (c.suggested && !(ai && ai.article === c.suggested.article)) {
+        suggested = normOf(c.suggested.article, c.suggested.clause, c.suggested.title, c.suggested.quote, false);
+        suggested.label = status === 'unverified' ? L.maybe : L.suggested;
+      }
+      const links = []; const seen = new Set();
+      const addLink = (n) => { const u = adiletUrl(n); if (u && !seen.has(String(n))) { seen.add(String(n)); links.push({ label: K.tabMain(n), url: u }); } };
+      if (norm) addLink(norm.article);
+      c.refs.forEach((x) => { if (!x.act && (x.state === 'ok' || x.state === 'clause_missing')) addLink(x.article); });
+      if (suggested) addLink(suggested.article);
+      return { id: c.id, text: c.text, status, statusLabel: L.status[status], cited: c.refs.length ? c.refs.map(refText) : [L.noRef], norm, suggested, links,
+        why: useAi ? (ai.explanation || '') : reasonText(c, status) };
+    });
+    // Articles of the answer that are not in the Special Part: from the claims and from the whole answer text.
+    const missing = []; const seenMiss = new Set();
+    const addMiss = (article, act, st) => { const key = article + '|' + (act || ''); if (seenMiss.has(key)) return; seenMiss.add(key);
+      missing.push(`${L.art(article)}${act ? ' ' + actName(act) : ''} — ${act ? L.refState.other_act : st === 'general_part' ? L.refState.general_part : K.refMissing}`); };
+    r.claims.forEach((c) => c.refs.forEach((x) => { if (['missing', 'general_part', 'other_act'].includes(x.state)) addMiss(x.article, x.act, x.state); }));
+    if (window.SAQScanner && window.SAQScanner.parseRefs && ctx.answer) {
+      window.SAQScanner.parseRefs(ctx.answer).forEach((x) => {
+        const act = x.act ? (x.act.name || x.act) : null;
+        if (act) addMiss(x.article, act, 'other_act'); else if (!adiletUrl(x.article)) addMiss(x.article, null, Number(x.article) < 406 ? 'general_part' : 'missing');
+      });
+    }
+    const counts = ['confirmed', 'partial', 'contradicts', 'unverified'].map((s) => ({ s, label: L.status[s], n: claims.filter((c) => c.status === s).length }));
+    const notes = [];
+    if (r.truncated) notes.push(L.truncated(r.maxClaims));
+    if (r.answerLanguage !== 'ru' && !ctx.ai) notes.push(L.langNote);
+    return { when: stamp(ctx.checkedAt || new Date()), date: ctx.checkedAt || new Date(), mode: ctx.ai ? L.modeAi(ctx.ai.model) : L.modeBase,
+      source: m ? plain(L.source(m)) : '', caseText: ctx.caseText || '', answer: ctx.answer || '', counts, total: claims.length, claims, missing, notes,
+      empty: claims.length ? '' : L.empty, quoteLabel: L.quoteLabel(m ? m.edition : ''), fragment: L.fragment, why: L.why, foot: footerInfo() };
+  }
+  function reportHtml(d) {
+    const P = R();
+    const claim = (c) => `<article class="pr-claim"><h3>${esc(t().claim)} ${c.id} — ${STATUS_MARK[c.status]} ${esc(c.statusLabel)}</h3>`
+      + `<p class="pr-claim-text">«${esc(c.text)}»</p><dl>`
+      + `<dt>${esc(P.cited)}</dt><dd>${c.cited.map(esc).join('<br>')}</dd>`
+      + `<dt>${esc(P.norm)}</dt><dd>${c.norm ? esc(c.norm.head) : esc(t().noNorm)}</dd>`
+      + (c.norm && c.norm.quote ? `<dt>${esc(d.quoteLabel)}</dt><dd class="pr-quote">${esc(c.norm.quote)}${c.norm.fragment ? ' <i>' + esc(d.fragment) + '</i>' : ''}</dd>` : `<dt>${esc(d.quoteLabel)}</dt><dd>${esc(P.noQuote)}</dd>`)
+      + (c.suggested ? `<dt>${esc(c.suggested.label)}</dt><dd>${esc(c.suggested.head)}${c.suggested.quote ? `<div class="pr-quote">${esc(c.suggested.quote)}</div>` : ''}</dd>` : '')
+      + (c.links.length ? `<dt>${esc(P.links)}</dt><dd>${c.links.map((l) => `${esc(l.label)}: <a href="${esc(l.url)}">${esc(l.url)}</a>`).join('<br>')}</dd>` : '')
+      + (c.why ? `<dt>${esc(d.why)}</dt><dd>${esc(c.why)}</dd>` : '')
+      + `</dl></article>`;
+    return `<header class="pr-head"><div class="pr-brand">SAQ ✦</div><h1>${esc(P.title)}</h1>`
+      + `<p><b>${esc(P.checkedAt)}:</b> ${esc(d.when)}</p><p>${esc(d.mode)}</p>${d.source ? `<p>${esc(d.source)}</p>` : ''}${d.notes.map((n) => `<p>${esc(n)}</p>`).join('')}</header>`
+      + `<section><h2>${esc(P.caseH)}</h2><div class="pr-text">${esc(d.caseText)}</div></section>`
+      + `<section><h2>${esc(P.answerH)}</h2><div class="pr-text">${esc(d.answer)}</div></section>`
+      + `<section><h2>${esc(P.summaryH)}</h2><table class="pr-summary"><tbody>${d.counts.map((x) => `<tr><td>${STATUS_MARK[x.s]} ${esc(x.label)}</td><td>${x.n}</td></tr>`).join('')}<tr><td><b>${esc(P.total(d.total))}</b></td><td></td></tr></tbody></table></section>`
+      + `<section><h2>${esc(P.claimsH)}</h2>${d.empty ? `<p>${esc(d.empty)}</p>` : d.claims.map(claim).join('')}</section>`
+      + `<section><h2>${esc(P.missingH)}</h2>${d.missing.length ? `<ul>${d.missing.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : `<p>${esc(P.missingNone)}</p>`}</section>`
+      + `<footer class="pr-foot"><p>${esc(d.foot.source)}: <a href="${esc(d.foot.url)}">${esc(d.foot.url)}</a></p>${d.foot.notes.map((n) => `<p>${esc(n)}</p>`).join('')}</footer>`;
+  }
+  function reportText(d) {
+    const P = R(); const out = []; const H = (s) => { out.push('', s.toUpperCase()); };
+    out.push(P.title, `${P.checkedAt}: ${d.when}`, d.mode);
+    if (d.source) out.push(d.source);
+    d.notes.forEach((n) => out.push(n));
+    H(P.caseH); out.push(d.caseText);
+    H(P.answerH); out.push(d.answer);
+    H(P.summaryH); d.counts.forEach((x) => out.push(`${x.label}: ${x.n}`)); out.push(P.total(d.total));
+    H(P.claimsH);
+    if (d.empty) out.push(d.empty);
+    d.claims.forEach((c) => {
+      out.push('', `${t().claim} ${c.id} — ${c.statusLabel}`, `«${c.text}»`, `${P.cited}: ${c.cited.join('; ')}`, `${P.norm}: ${c.norm ? c.norm.head : t().noNorm}`);
+      out.push(c.norm && c.norm.quote ? `${d.quoteLabel} «${c.norm.quote}»${c.norm.fragment ? ' ' + d.fragment : ''}` : `${d.quoteLabel} ${P.noQuote}`);
+      if (c.suggested) out.push(`${c.suggested.label}: ${c.suggested.head}${c.suggested.quote ? ' «' + c.suggested.quote + '»' : ''}`);
+      c.links.forEach((l) => out.push(`${P.linkWord} ${l.label}: ${l.url}`));
+      if (c.why) out.push(`${d.why}: ${c.why}`);
+    });
+    H(P.missingH);
+    if (d.missing.length) d.missing.forEach((x) => out.push('— ' + x)); else out.push(P.missingNone);
+    out.push('', '—', `${d.foot.source}: ${d.foot.url}`);
+    d.foot.notes.forEach((n) => out.push(n));
+    return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+  }
+  function printReport(ctx) {
+    const d = reportModel(ctx); if (!d) return;
+    let box = document.getElementById('saq-print-report');
+    if (!box) { box = document.createElement('section'); box.id = 'saq-print-report'; box.setAttribute('data-saq-no-translate', ''); box.setAttribute('aria-hidden', 'true'); document.body.appendChild(box); }
+    box.setAttribute('lang', lang());
+    box.innerHTML = reportHtml(d);
+    const root = document.documentElement; const oldTitle = document.title;
+    const x = d.date;
+    document.title = `${R().file}_${x.getFullYear()}-${two(x.getMonth() + 1)}-${two(x.getDate())}_${two(x.getHours())}-${two(x.getMinutes())}`;
+    root.classList.add('saq-printing');
+    const done = () => { root.classList.remove('saq-printing'); document.title = oldTitle; window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    try { window.print(); } catch (_) { done(); }
+  }
+  async function copyReport() {
+    const d = reportModel(); if (!d) return;
+    const text = reportText(d); const note = $('#scan-report .saq-report-copied');
+    let ok = false;
+    try { if (navigator.clipboard && window.isSecureContext !== false) { await navigator.clipboard.writeText(text); ok = true; } } catch (_) { ok = false; }
+    if (!ok) {
+      const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+      ta.remove();
+    }
+    if (note) {
+      note.textContent = ok ? R().copied : R().copyFail;
+      note.classList.toggle('is-error', !ok);
+      clearTimeout(copyReport.timer); copyReport.timer = setTimeout(() => { if (note.isConnected) note.textContent = ''; }, ok ? 3500 : 8000);
+    }
+  }
+  const reportActionsHtml = () => `<div class="saq-report-actions" data-no-artlink><button type="button" class="btn primary small" data-saq-report="pdf">${esc(R().pdf)}</button><button type="button" class="btn secondary small" data-saq-report="copy">${esc(R().copy)}</button><span class="saq-report-copied" role="status" aria-live="polite"></span></div>`;
+  window.SAQReport = { model: () => reportModel(), text: () => { const d = reportModel(); return d ? reportText(d) : ''; }, html: () => { const d = reportModel(); return d ? reportHtml(d) : ''; } };
+
+  /* ------------------------------------------- history of checks (v28) */
+  // Only in this browser (localStorage). Nothing is sent anywhere. The last HMAX checks are kept.
+  const HIST = {
+    ru: { title: 'История проверок', note: 'История хранится только в этом браузере и никуда не отправляется.', empty: 'Здесь появятся ваши проверки',
+      off: 'Запись истории выключена в настройках ⚙ — новые проверки не сохраняются.', open: 'Открыть', pdf: 'Скачать отчёт', del: 'Удалить', clear: 'Очистить историю',
+      ask: 'Удалить все проверки из истории? Это действие нельзя отменить.', yes: 'Да, очистить', no: 'Отмена', cleared: 'История очищена.', deleted: 'Запись удалена.',
+      opened: 'Проверка из истории открыта — результат ниже под полями.', count: (n, max) => `Сохранено: ${n} из ${max}`, noCase: '(кейс не заполнен)', list: 'Сохранённые проверки' },
+    kk: { title: 'Тексерулер тарихы', note: 'Тарих тек осы браузерде сақталады және ешқайда жіберілмейді.', empty: 'Мұнда сіздің тексерулеріңіз пайда болады',
+      off: 'Тарихты жазу ⚙ баптауларында өшірілген — жаңа тексерулер сақталмайды.', open: 'Ашу', pdf: 'Есепті жүктеу', del: 'Жою', clear: 'Тарихты тазалау',
+      ask: 'Тарихтағы барлық тексерулерді жою керек пе? Бұл әрекетті қайтару мүмкін емес.', yes: 'Иә, тазалау', no: 'Болдырмау', cleared: 'Тарих тазаланды.', deleted: 'Жазба жойылды.',
+      opened: 'Тарихтағы тексеру ашылды — нәтиже өрістердің астында.', count: (n, max) => `Сақталды: ${n} / ${max}`, noCase: '(кейс толтырылмаған)', list: 'Сақталған тексерулер' },
+    en: { title: 'Check history', note: 'The history is stored only in this browser and is never sent anywhere.', empty: 'Your checks will appear here',
+      off: 'Saving history is turned off in ⚙ settings — new checks are not saved.', open: 'Open', pdf: 'Download report', del: 'Delete', clear: 'Clear history',
+      ask: 'Delete all checks from the history? This cannot be undone.', yes: 'Yes, clear', no: 'Cancel', cleared: 'History cleared.', deleted: 'Entry deleted.',
+      opened: 'The check from the history is open — the result is below the fields.', count: (n, max) => `Saved: ${n} of ${max}`, noCase: '(no case text)', list: 'Saved checks' },
+  };
+  const HI = () => HIST[lang()];
+  const HKEY = 'saq-history'; const HON = 'saq-history-on'; const HMAX = 10;
+  const histMem = { list: [], on: true }; // used when the browser refuses storage (private mode)
+  function histLoad() {
+    try {
+      const raw = localStorage.getItem(HKEY); if (raw === null) return histMem.list.slice();
+      const a = JSON.parse(raw);
+      return Array.isArray(a) ? a.filter((x) => x && typeof x.id === 'string' && typeof x.caseText === 'string' && typeof x.answer === 'string' && x.at).slice(0, HMAX) : [];
+    } catch (_) { return histMem.list.slice(); }
+  }
+  function histSave(list) {
+    histMem.list = list.slice(0, HMAX);
+    try { if (list.length) localStorage.setItem(HKEY, JSON.stringify(histMem.list)); else localStorage.removeItem(HKEY); } catch (_) { /* kept for this visit only */ }
+  }
+  function histOn() { try { const v = localStorage.getItem(HON); return v === null ? histMem.on : v !== '0'; } catch (_) { return histMem.on; } }
+  function setHistOn(on) { histMem.on = on; try { if (on) localStorage.removeItem(HON); else localStorage.setItem(HON, '0'); } catch (_) { /* this visit only */ } }
+  const STATUS_KEYS = ['confirmed', 'partial', 'contradicts', 'unverified'];
+  function histAdd() {
+    if (!histOn() || !state.report) return;
+    const d = reportModel(state); if (!d) return;
+    const counts = {}; d.counts.forEach((x) => { counts[x.s] = x.n; });
+    const entry = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), at: (state.checkedAt || new Date()).toISOString(),
+      caseText: state.caseText || '', answer: state.answer || '', counts, total: d.total };
+    // The same case and answer checked again moves to the top instead of appearing twice.
+    const list = histLoad().filter((x) => !(x.caseText === entry.caseText && x.answer === entry.answer));
+    list.unshift(entry);
+    histSave(list.slice(0, HMAX));
+  }
+  const hstate = { confirm: false, msg: '' };
+  function histItemHtml(x) {
+    const H = HI(); const L = t();
+    const when = stamp(new Date(x.at));
+    const snippet = x.caseText.trim() ? x.caseText.trim().replace(/\s+/g, ' ').slice(0, 80) + (x.caseText.trim().length > 80 ? '…' : '') : H.noCase;
+    const meta = `hist-${x.id}-meta`;
+    const stats = STATUS_KEYS.map((s) => `<li class="saq-hist-stat saq-hist-stat--${s}">${STATUS_MARK[s]} ${esc(L.status[s])}: <b>${Number((x.counts || {})[s]) || 0}</b></li>`).join('');
+    return `<li class="saq-history-item"><div class="saq-history-meta" id="${meta}"><time datetime="${esc(x.at)}">${esc(when)}</time>`
+      + `<p class="saq-history-case">${esc(snippet)}</p><ul class="saq-history-stats">${stats}</ul></div>`
+      + `<div class="saq-history-actions"><button type="button" class="btn secondary small" data-hist-open="${esc(x.id)}" aria-describedby="${meta}">${esc(H.open)}</button>`
+      + `<button type="button" class="btn secondary small" data-hist-pdf="${esc(x.id)}" aria-describedby="${meta}">${esc(H.pdf)}</button>`
+      + `<button type="button" class="btn ghost small saq-history-del" data-hist-del="${esc(x.id)}" aria-describedby="${meta}">${esc(H.del)}</button></div></li>`;
+  }
+  function renderHistory(focus) {
+    const box = $('#scan-history'); if (!box) return;
+    const H = HI(); const list = histLoad();
+    const foot = !list.length ? '' : hstate.confirm
+      ? `<div class="saq-history-confirm"><p id="hist-ask" tabindex="-1">${esc(H.ask)}</p><div class="saq-history-confirm-actions"><button type="button" class="btn primary small" data-hist-yes>${esc(H.yes)}</button><button type="button" class="btn secondary small" data-hist-no>${esc(H.no)}</button></div></div>`
+      : `<button type="button" class="btn ghost small saq-history-clear" data-hist-clear>${esc(H.clear)}</button>`;
+    box.innerHTML = `<div class="saq-history-head"><h3 id="scan-history-title" tabindex="-1">${esc(H.title)}</h3>${list.length ? `<span class="pill">${esc(H.count(list.length, HMAX))}</span>` : ''}</div>`
+      + `<p class="saq-history-note">${esc(H.note)}</p>`
+      + (histOn() ? '' : `<p class="saq-history-off">${esc(H.off)}</p>`)
+      + (list.length ? `<ol class="saq-history-list" aria-label="${esc(H.list)}">${list.map(histItemHtml).join('')}</ol>` : `<p class="saq-history-empty">${esc(H.empty)}</p>`)
+      + `<div class="saq-history-foot">${foot}</div><p class="saq-history-status" role="status" aria-live="polite">${esc(hstate.msg)}</p>`;
+    box.setAttribute('aria-labelledby', 'scan-history-title');
+    if (focus) { const el = box.querySelector(focus); if (el) el.focus({ preventScroll: false }); }
+  }
+  function histSay(msg) { hstate.msg = msg; clearTimeout(histSay.t); histSay.t = setTimeout(() => { hstate.msg = ''; const st = $('#scan-history .saq-history-status'); if (st) st.textContent = ''; }, 5000); }
+  async function histEntryContext(x) {
+    const law = await loadLaw();
+    return { report: window.SAQScanner.analyze(law, x.caseText, x.answer), ai: null, answer: x.answer, caseText: x.caseText, checkedAt: new Date(x.at) };
+  }
+  function histOpen(x) {
+    $('#case').value = x.caseText; $('#ai').value = x.answer;
+    $('#case').dispatchEvent(new Event('input')); $('#ai').dispatchEvent(new Event('input'));
+    return run({ fromHistory: x });
+  }
+  function histClick(e) {
+    const list = histLoad(); const find = (id) => list.find((x) => x.id === id);
+    let b;
+    if ((b = e.target.closest('[data-hist-open]'))) { const x = find(b.dataset.histOpen); if (x) histOpen(x); return; }
+    if ((b = e.target.closest('[data-hist-pdf]'))) { const x = find(b.dataset.histPdf); if (x) histEntryContext(x).then(printReport).catch(() => { $('#scan-info').textContent = t().loadFail; }); return; }
+    if ((b = e.target.closest('[data-hist-del]'))) {
+      const i = list.findIndex((x) => x.id === b.dataset.histDel); if (i < 0) return;
+      list.splice(i, 1); histSave(list); hstate.confirm = false; histSay(HI().deleted);
+      const next = list[i] || list[i - 1];
+      renderHistory(next ? `[data-hist-open="${next.id}"]` : '#scan-history-title'); return;
+    }
+    if (e.target.closest('[data-hist-clear]')) { hstate.confirm = true; hstate.msg = ''; renderHistory('#hist-ask'); return; }
+    if (e.target.closest('[data-hist-yes]')) { histSave([]); hstate.confirm = false; histSay(HI().cleared); renderHistory('#scan-history-title'); return; }
+    if (e.target.closest('[data-hist-no]')) { hstate.confirm = false; renderHistory('[data-hist-clear]'); }
+  }
+  function initHistory() {
+    const box = $('#scan-history'); if (!box) return;
+    box.addEventListener('click', histClick);
+    box.addEventListener('keydown', (e) => { if (e.key === 'Escape' && hstate.confirm) { e.stopPropagation(); hstate.confirm = false; renderHistory('[data-hist-clear]'); } });
+    const tg = document.getElementById('saq-history-toggle');
+    const syncToggle = () => { if (tg) tg.setAttribute('aria-checked', String(histOn())); };
+    if (tg) tg.addEventListener('click', () => { setHistOn(!histOn()); syncToggle(); renderHistory(); });
+    window.addEventListener('storage', (e) => { if (e.key === HKEY || e.key === HON || e.key === null) { syncToggle(); renderHistory(); } });
+    syncToggle(); renderHistory();
+  }
   const REASON = {
     contradicts: ['qty_mismatch', 'modal_conflict', 'role_conflict', 'duty_vs_right', 'exclusion_conflict', 'clause_missing', 'topic_mismatch', 'low_overlap'],
     partial: ['partial_overlap', 'qty_missing', 'negation_unclear', 'unknown_terms', 'clause_missing', 'low_overlap'],
@@ -548,6 +818,7 @@
       + (m ? `<p class="saq-scan-src" data-no-artlink>${L.source(m)}</p>` : '')
       + aiErr + langNote + (r.truncated ? `<p class="saq-scan-warn">${esc(L.truncated(r.maxClaims))}</p>` : '')
       + (r.claims.length ? `<div class="resultstats saq-scan-stats">${stats}</div>${compareHtml(r, aiById)}${caseNorms}${r.claims.map((c) => claimCard(c, aiById.get(c.id))).join('')}` : `<p>${esc(L.empty)}</p>${caseNorms}`);
+    out.insertAdjacentHTML('beforeend', reportActionsHtml());
     linkArticles(out);
     out.classList.add('show');
     focusMark();
@@ -571,8 +842,9 @@
     state.aiPending = false;
     renderReport();
   }
-  async function run() {
+  async function run(opts) {
     const L = t();
+    const fromHist = opts && opts.fromHistory ? opts.fromHistory : null;
     const caseText = $('#case').value.trim(); const answer = $('#ai').value.trim();
     const info = $('#scan-info'); const btn = $('#scan-btn');
     if (!caseText || !answer) { info.textContent = L.fill; return; }
@@ -584,10 +856,15 @@
       info.textContent = L.running;
       await new Promise((r) => setTimeout(r, 30));
       state.report = window.SAQScanner.analyze(law, caseText, answer);
-      state.answer = answer; state.sel = null; state.tab = null;
+      state.answer = answer; state.caseText = caseText; state.checkedAt = fromHist ? new Date(fromHist.at) : new Date(); state.sel = null; state.tab = null;
       state.ai = null; state.aiError = null; state.aiPending = false;
       renderReport();
       info.textContent = L.done(fmtDate(law.meta.edition_date));
+      if (fromHist) {
+        info.textContent = HI().opened + ' ' + info.textContent;
+        const out = $('#scan-report');
+        if (out) { out.setAttribute('tabindex', '-1'); try { out.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' }); } catch (_) { out.scrollIntoView(); } out.focus({ preventScroll: true }); }
+      } else { histAdd(); renderHistory(); }
       if (aiOn() && state.report.claims.length) runAi(caseText, answer, runId);
     } catch (e) {
       info.textContent = L.loadFail;
@@ -599,7 +876,7 @@
     $('#case').value = ''; $('#ai').value = '';
     $('#scan-info').textContent = '';
     const out = $('#scan-report'); out.classList.remove('show'); out.innerHTML = '';
-    state.report = null; state.ai = null; state.aiError = null; state.answer = ''; state.sel = null; state.tab = null; state.runId = (state.runId || 0) + 1;
+    state.report = null; state.ai = null; state.aiError = null; state.answer = ''; state.caseText = ''; state.checkedAt = null; state.sel = null; state.tab = null; state.runId = (state.runId || 0) + 1;
     $('#case').dispatchEvent(new Event('input')); $('#ai').dispatchEvent(new Event('input'));
   }
   function useExample(key) {
@@ -614,6 +891,8 @@
     const report = $('#scan-report');
     report.setAttribute('data-saq-no-translate', '');
     report.addEventListener('click', (e) => {
+      const rep = e.target.closest('[data-saq-report]');
+      if (rep) { if (rep.dataset.saqReport === 'pdf') printReport(); else copyReport(); return; }
       const claim = e.target.closest('[data-claim]');
       if (claim) { state.sel = Number(claim.dataset.claim); state.tab = null; refreshCompare(true); return; }
       const tab = e.target.closest('[data-cmp-tab]');
@@ -625,10 +904,11 @@
         if (box) { try { box.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' }); } catch (_) { box.scrollIntoView(); } }
       }
     });
-    $('#scan-btn').onclick = run;
+    $('#scan-btn').onclick = () => run();
     $('#scan-clear').onclick = clear;
     document.querySelectorAll('[data-saq-example]').forEach((b) => b.addEventListener('click', () => useExample(b.dataset.saqExample)));
-    document.querySelectorAll('[data-saq-lang]').forEach((b) => b.addEventListener('click', () => setTimeout(() => { renderSource(); renderReport(); }, 0)));
+    document.querySelectorAll('[data-saq-lang]').forEach((b) => b.addEventListener('click', () => setTimeout(() => { renderSource(); renderReport(); renderHistory(); }, 0)));
+    initHistory();
     renderSource();
     loadStatus();
     const warm = () => { loadLaw().catch(() => {}); };
