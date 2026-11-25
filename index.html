@@ -1114,6 +1114,646 @@ html[data-saq-theme="dark"]{--saq-h-strong:var(--theme-accent,#f16eac)}
  #scan-history .saq-history-confirm-actions .btn{flex:1 1 auto;width:auto}
 }
 @media print{#scan-history{display:none!important}}
+
+/* v29: live scan, scales «AI answer ↔ Civil Code», map of the Special Part, card glow, helper orb */
+/* --- live scan --- */
+.saq-live-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 6px;padding:10px 12px 10px 14px;border:1px solid var(--theme-border,#ebcbd9);border-radius:14px;background:var(--theme-soft,#fff0f6);color:var(--theme-ink,#4c1031);font-weight:800;font-size:13.5px}
+.saq-live-dot{width:10px;height:10px;flex:0 0 10px;border-radius:50%;background:var(--saq-h-strong);animation:saqLivePulse 1.1s ease-out infinite}
+.saq-live-count{color:var(--theme-ink,#4c1031);font-weight:700;font-variant-numeric:tabular-nums}
+.saq-live-skip{margin-left:auto;min-height:36px;padding:6px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:10px;background:var(--theme-surface,#fff);color:var(--saq-h-strong);font:800 13px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer}
+.saq-live-skip:hover{background:var(--theme-soft-2,#ffe1ed)}
+.saq-live-skip:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:2px}
+@keyframes saqLivePulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--saq-h-strong) 55%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+#scan-report .saq-cmp-text{position:relative}
+.saq-live .saq-cmp-claim{position:relative;z-index:1;transition:background-color .35s ease,border-color .35s ease,color .35s ease}
+.saq-live .saq-cmp-claim:not(.is-lit){background:transparent!important;border-bottom-color:transparent!important;border-bottom-style:solid!important;box-shadow:none!important;outline:none!important}
+.saq-live .saq-cmp-claim.is-lit{animation:saqLiveLit .6s ease-out}
+@keyframes saqLiveLit{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--saq-h-strong) 45%,transparent)}100%{box-shadow:0 0 0 8px transparent}}
+.saq-live-beam{position:absolute;left:-8px;right:-8px;top:0;height:0;z-index:0;border-radius:12px;pointer-events:none;overflow:hidden;opacity:0;background:linear-gradient(90deg,color-mix(in srgb,var(--saq-h-strong) 14%,transparent),color-mix(in srgb,var(--saq-h-strong) 30%,transparent) 50%,color-mix(in srgb,var(--saq-h-strong) 14%,transparent));border-left:3px solid var(--saq-h-strong);box-shadow:0 0 26px color-mix(in srgb,var(--saq-h-strong) 40%,transparent);transition:top .3s cubic-bezier(.4,0,.2,1),height .3s cubic-bezier(.4,0,.2,1),opacity .35s ease}
+.saq-live-beam::after{content:'';position:absolute;top:0;bottom:0;left:-30%;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:saqLiveSweep .6s linear infinite}
+.saq-live-beam.is-on{opacity:1}.saq-live-beam.is-gone{opacity:0}
+@keyframes saqLiveSweep{to{left:100%}}
+.saq-live .saq-cmp-lawcol{opacity:.35;filter:saturate(.5);transition:opacity .5s ease,filter .5s ease}
+.saq-live.saq-live-cards .saq-cmp-lawcol{opacity:1;filter:none}
+.saq-live .saq-claim{opacity:0;transform:translateY(16px)}
+.saq-live.saq-live-cards .saq-claim{animation:saqLiveCard .55s ease-out both;animation-delay:calc(var(--saq-i,0) * 90ms)}
+@keyframes saqLiveCard{to{opacity:1;transform:none}}
+.saq-stat.saq-bump{animation:saqBump .42s ease-out}
+@keyframes saqBump{40%{transform:scale(1.12)}100%{transform:none}}
+
+/* --- scales: the Themis scales from the home page (cast metal, backlight, sheen) --- */
+#saq-scales{position:relative;margin:18px 0 8px;padding:20px 16px 18px;border:1px solid var(--theme-border,#ebcbd9);border-radius:22px;background:radial-gradient(120% 90% at 50% 40%,color-mix(in srgb,var(--theme-accent,#e91c79) 9%,var(--theme-surface,#fff)) 0,var(--theme-surface,#fff) 64%);text-align:center;overflow:hidden}
+html[data-saq-theme="dark"] #saq-scales{background:radial-gradient(120% 90% at 50% 40%,color-mix(in srgb,var(--theme-accent,#f16eac) 15%,var(--theme-surface,#211a26)) 0,var(--theme-surface,#211a26) 66%)}
+#saq-scales h4{margin:0 0 2px;font:700 19px/1.3 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031);letter-spacing:.01em}
+.saq-sc-stage{position:relative;width:min(100%,470px);margin:0 auto}
+.saq-sc-aura{position:absolute;left:50%;top:44%;width:96%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,228,184,.6) 0,color-mix(in srgb,var(--theme-accent,#e91c79) 24%,transparent) 34%,transparent 68%);filter:blur(4px);pointer-events:none;animation:saqScAura 6s ease-in-out infinite}
+html[data-saq-theme="dark"] .saq-sc-aura{background:radial-gradient(circle,rgba(255,206,150,.42) 0,color-mix(in srgb,var(--theme-accent,#f16eac) 30%,transparent) 36%,transparent 70%)}
+.saq-sc-rays{position:absolute;left:50%;top:40%;width:120%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);background:repeating-conic-gradient(from 0deg,rgba(255,236,200,.24) 0 3deg,transparent 3deg 15deg);-webkit-mask:radial-gradient(circle,#000 0,rgba(0,0,0,.55) 30%,transparent 62%);mask:radial-gradient(circle,#000 0,rgba(0,0,0,.55) 30%,transparent 62%);opacity:.85;pointer-events:none;animation:saqScRays 80s linear infinite}
+.saq-sc-beam,.saq-sc-pan{position:absolute;background-repeat:no-repeat;background-size:100% 100%}
+.saq-sc-beam{z-index:3;background-image:url(themis_sc_beam.webp);filter:drop-shadow(0 10px 14px rgba(70,30,10,.32)) drop-shadow(0 0 10px rgba(255,205,150,.3))}
+.saq-sc-pan{z-index:2;transform-origin:50% 0;filter:drop-shadow(0 12px 14px rgba(70,30,10,.3)) drop-shadow(0 0 8px rgba(255,205,150,.24))}
+.saq-sc-pan[data-side="ai"]{background-image:url(themis_sc_pan_l.webp)}
+.saq-sc-pan[data-side="law"]{background-image:url(themis_sc_pan_r.webp)}
+.saq-sc-sheen{position:absolute;inset:0;background:linear-gradient(105deg,transparent 42%,rgba(255,250,236,.92) 50%,transparent 58%) no-repeat;background-size:260% 100%;background-position:120% 0;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mix-blend-mode:screen;pointer-events:none;animation:saqScSheen 5.5s ease-in-out infinite}
+.saq-sc-beam .saq-sc-sheen{-webkit-mask-image:url(themis_sc_beam.webp);mask-image:url(themis_sc_beam.webp)}
+.saq-sc-pan[data-side="ai"] .saq-sc-sheen{-webkit-mask-image:url(themis_sc_pan_l.webp);mask-image:url(themis_sc_pan_l.webp);animation-delay:.7s}
+.saq-sc-pan[data-side="law"] .saq-sc-sheen{-webkit-mask-image:url(themis_sc_pan_r.webp);mask-image:url(themis_sc_pan_r.webp);animation-delay:1.1s}
+@keyframes saqScSheen{0%,55%{background-position:120% 0}85%,100%{background-position:-20% 0}}
+@keyframes saqScAura{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}}
+@keyframes saqScRays{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.saq-sc-pan.is-hit{animation:saqScHit .6s cubic-bezier(.3,1.5,.5,1)}
+@keyframes saqScHit{30%{transform:translateY(7px) rotate(-1.2deg)}65%{transform:translateY(-2px) rotate(.6deg)}100%{transform:none}}
+.saq-sc-load{position:absolute;z-index:4;transform:translate(-50%,-100%);display:flex;flex-direction:column-reverse;align-items:center;gap:4px;width:max-content;max-width:42%;pointer-events:none}
+.saq-sc-w{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border:1px solid rgba(186,140,88,.8);border-radius:999px;background:color-mix(in srgb,var(--theme-surface,#fff) 92%,transparent);color:var(--theme-ink,#4c1031);font:700 11.5px/1.25 'DM Sans',Arial,sans-serif;text-align:left;box-shadow:0 6px 14px rgba(60,20,10,.16),inset 0 1px 0 rgba(255,255,255,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.saq-sc-w i{flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:var(--theme-muted,#755466);box-shadow:0 0 0 2px color-mix(in srgb,currentColor 12%,transparent)}
+.saq-sc-w--contradicts i{background:var(--theme-error-fg)}.saq-sc-w--partial i{background:var(--theme-warn-fg)}
+.saq-sc-medal{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6e2 0,#f0cf9c 22%,#c98f55 58%,#8a5a2e 88%,#6a4120 100%);box-shadow:inset 0 0 0 3px rgba(255,236,200,.55),inset 0 0 0 5px rgba(120,72,32,.45),0 8px 16px rgba(60,20,10,.3),0 0 14px rgba(255,205,150,.38);color:#4a2913;font:700 22px/1 'Playfair Display',Georgia,serif;text-shadow:0 1px 0 rgba(255,240,215,.7)}
+.saq-sc-label{position:absolute;z-index:4;transform:translate(-50%,0);font:700 12.5px/1.2 'Playfair Display',Georgia,serif;letter-spacing:.07em;text-transform:uppercase;color:var(--theme-ink,#4c1031);white-space:nowrap}
+.saq-sc-seal{position:absolute;z-index:5;display:flex;flex-direction:column;align-items:center;gap:6px;transform:translate(-50%,-50%) rotate(-7deg);opacity:0;pointer-events:none}
+.saq-sc-seal b{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6e2 0,#f0cf9c 22%,#c98f55 58%,#8a5a2e 88%,#6a4120 100%);box-shadow:inset 0 0 0 3px rgba(255,236,200,.6),inset 0 0 0 6px rgba(120,72,32,.4),0 10px 20px rgba(60,20,10,.32),0 0 20px rgba(255,205,150,.5);color:#4a2913;font:800 22px/1 'DM Sans',Arial,sans-serif;text-shadow:0 1px 0 rgba(255,240,215,.75)}
+.saq-sc-seal span{padding:5px 12px;border:1px solid rgba(186,140,88,.8);border-radius:999px;background:var(--theme-surface,#fff);font:700 11.5px/1.2 'Playfair Display',Georgia,serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;box-shadow:0 6px 14px rgba(60,20,10,.14)}
+.is-ok .saq-sc-seal span{color:var(--theme-success-fg)}.is-bad .saq-sc-seal span{color:var(--theme-error-fg)}
+#saq-scales.is-final .saq-sc-seal,#saq-scales.is-stamped .saq-sc-seal{opacity:1}
+#saq-scales.is-stamped .saq-sc-seal{animation:saqScSeal .7s cubic-bezier(.2,.9,.3,1.25) both}
+#saq-scales.is-stamped .saq-sc-aura{animation:saqScAuraHit 1.4s ease-out,saqScAura 6s ease-in-out 1.4s infinite}
+@keyframes saqScSeal{0%{opacity:0;transform:translate(-50%,-50%) rotate(-7deg) scale(1.8)}60%{opacity:1;transform:translate(-50%,-50%) rotate(-7deg) scale(.92)}100%{opacity:1;transform:translate(-50%,-50%) rotate(-7deg) scale(1)}}
+@keyframes saqScAuraHit{0%{opacity:.78}30%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}100%{opacity:.9;transform:translate(-50%,-50%) scale(1)}}
+.saq-sc-verdict{margin:10px auto 0;max-width:600px;font-weight:800;color:var(--theme-ink,#4c1031);transition:opacity .45s ease}
+.saq-sc-note{margin:4px auto 0;max-width:600px;font-size:12.5px;color:var(--theme-muted,#755466);transition:opacity .45s ease}
+.saq-live .saq-sc-w{opacity:0}
+.saq-live .saq-sc-w.is-dropped{animation:saqScDrop .55s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes saqScDrop{0%{opacity:0;transform:translateY(-70px) scale(.9)}65%{opacity:1;transform:translateY(5px) scale(1.03)}100%{opacity:1;transform:none}}
+.saq-live #saq-scales:not(.is-stamped) .saq-sc-verdict,.saq-live #saq-scales:not(.is-stamped) .saq-sc-note{opacity:0}
+
+/* --- map of the Special Part --- */
+#saq-gkmap{margin-top:26px;padding:22px;border:1px solid var(--theme-border,#ebcbd9);border-radius:22px;background:var(--theme-surface,#fff);color:var(--theme-text,#4c2b3d)}
+.saq-gk-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 22px;flex-wrap:wrap}
+.saq-gk-title{margin:0;color:var(--theme-ink,#4c1031)}
+.saq-gk-lead{margin:6px 0 0;max-width:640px;color:var(--theme-muted,#755466);font-size:14px;line-height:1.55}
+.saq-gk-stats{display:flex;gap:10px;flex-wrap:wrap}
+.saq-gk-stat{min-width:88px;padding:10px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-soft,#fff0f6);text-align:center}
+.saq-gk-stat strong{display:block;font:700 28px/1.1 'Playfair Display',Georgia,serif;color:var(--saq-h-strong);font-variant-numeric:tabular-nums}
+.saq-gk-stat span{display:block;margin-top:2px;font-size:12px;font-weight:800;color:var(--theme-ink,#4c1031)}
+.saq-gk-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:16px 0 10px;font-size:12.5px;font-weight:700;color:var(--theme-ink,#4c1031)}
+.saq-gk-lg{display:inline-flex;align-items:center;gap:7px}
+.saq-gk-sw{display:inline-block;width:13px;height:13px;border-radius:3px}
+.saq-gk-wrap{position:relative}
+.saq-gk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(13px,1fr));gap:3px;padding:10px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-bg,#fffdf9)}
+.saq-gk-grid:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:3px}
+.saq-gk-c{position:relative;display:block;aspect-ratio:1;border-radius:3px;transition:transform .16s ease,box-shadow .16s ease,opacity .2s ease}
+.saq-gk-c.s0,.saq-gk-sw.s0{background:color-mix(in srgb,var(--theme-accent,#e91c79) 28%,var(--theme-surface,#fff))}
+.saq-gk-c.s0.alt{background:color-mix(in srgb,var(--theme-accent,#e91c79) 38%,var(--theme-surface,#fff))}
+.saq-gk-c.s1,.saq-gk-sw.s1{background:color-mix(in srgb,var(--theme-accent,#e91c79) 46%,var(--theme-surface,#fff))}
+.saq-gk-c.s1.alt{background:color-mix(in srgb,var(--theme-accent,#e91c79) 56%,var(--theme-surface,#fff))}
+.saq-gk-c.s2,.saq-gk-sw.s2{background:color-mix(in srgb,var(--theme-accent-2,#a5145a) 62%,var(--theme-surface,#fff))}
+.saq-gk-c.s2.alt{background:color-mix(in srgb,var(--theme-accent-2,#a5145a) 72%,var(--theme-surface,#fff))}
+.saq-gk-c.s3,.saq-gk-sw.s3{background:color-mix(in srgb,var(--theme-accent-2,#a5145a) 84%,var(--theme-ink,#4c1031))}
+.saq-gk-c.s3.alt{background:color-mix(in srgb,var(--theme-accent-2,#a5145a) 94%,var(--theme-ink,#4c1031))}
+.saq-gk-grid.has-ch .saq-gk-c:not(.is-ch):not(.is-lit){opacity:.38}html[data-saq-theme="dark"] .saq-gk-c.s0,html[data-saq-theme="dark"] .saq-gk-sw.s0{background:color-mix(in srgb,var(--theme-accent,#f16eac) 30%,var(--theme-surface,#2a2230))}html[data-saq-theme="dark"] .saq-gk-c.s0.alt{background:color-mix(in srgb,var(--theme-accent,#f16eac) 40%,var(--theme-surface,#2a2230))}html[data-saq-theme="dark"] .saq-gk-c.s1,html[data-saq-theme="dark"] .saq-gk-sw.s1{background:color-mix(in srgb,var(--theme-accent,#f16eac) 54%,var(--theme-surface,#2a2230))}html[data-saq-theme="dark"] .saq-gk-c.s1.alt{background:color-mix(in srgb,var(--theme-accent,#f16eac) 64%,var(--theme-surface,#2a2230))}html[data-saq-theme="dark"] .saq-gk-c.s2,html[data-saq-theme="dark"] .saq-gk-sw.s2{background:color-mix(in srgb,var(--theme-accent,#f16eac) 76%,white)}html[data-saq-theme="dark"] .saq-gk-c.s2.alt{background:color-mix(in srgb,var(--theme-accent,#f16eac) 66%,white)}html[data-saq-theme="dark"] .saq-gk-c.s3,html[data-saq-theme="dark"] .saq-gk-sw.s3{background:color-mix(in srgb,var(--theme-accent,#f16eac) 40%,white)}html[data-saq-theme="dark"] .saq-gk-c.s3.alt{background:color-mix(in srgb,var(--theme-accent,#f16eac) 30%,white)}
+.saq-gk-c:hover,.saq-gk-c.is-active{z-index:3;transform:scale(1.7);box-shadow:0 0 0 2px var(--theme-surface,#fff),0 0 0 4px var(--saq-h-strong)}
+.saq-gk-c.is-lit{z-index:2;transform:scale(1.25);box-shadow:0 0 0 2px var(--theme-surface,#fff),0 0 12px 2px color-mix(in srgb,currentColor 55%,transparent)}
+.saq-gk-c.lit--confirmed{background:var(--theme-success-fg)!important;color:var(--theme-success-fg)}
+.saq-gk-c.lit--partial{background:var(--theme-warn-fg)!important;color:var(--theme-warn-fg)}
+.saq-gk-c.lit--contradicts{background:var(--theme-error-fg)!important;color:var(--theme-error-fg)}
+.saq-gk-c.lit--unverified{background:var(--theme-muted,#755466)!important;color:var(--theme-muted,#755466)}
+.saq-gk-c.is-pop{animation:saqGkPop .9s ease-out}
+@keyframes saqGkPop{0%{transform:scale(1)}30%{transform:scale(2.4)}100%{transform:scale(1.25)}}
+.saq-gk-tip{position:absolute;z-index:6;width:max-content;max-width:min(300px,100%);padding:10px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:12px;background:var(--theme-surface,#fff);color:var(--theme-text,#4c2b3d);box-shadow:0 14px 32px rgba(40,6,24,.22);font-size:13px;line-height:1.45}
+.saq-gk-tip[hidden]{display:none}
+.saq-gk-tip b{display:block;color:var(--theme-ink,#4c1031)}.saq-gk-tip b span{font-weight:700}
+.saq-gk-tip small{display:block;margin-top:3px;color:var(--theme-muted,#755466);font-size:12px}
+.saq-gk-open{display:inline-block;margin-top:6px;font-weight:800;color:var(--saq-h-strong);text-decoration:none}
+.saq-gk-open:hover{text-decoration:underline}
+.saq-gk-tipst{display:block;width:max-content;max-width:100%;margin-top:6px;padding:2px 8px;border-radius:999px;font-style:normal;font-size:12px;font-weight:800}
+.saq-gk-tipst--confirmed,.saq-gk-lchip--confirmed{background:var(--theme-success-bg);color:var(--theme-success-fg)}
+.saq-gk-tipst--partial,.saq-gk-lchip--partial{background:var(--theme-warn-bg);color:var(--theme-warn-fg)}
+.saq-gk-tipst--contradicts,.saq-gk-lchip--contradicts{background:var(--theme-error-bg);color:var(--theme-error-fg)}
+.saq-gk-tipst--unverified,.saq-gk-lchip--unverified{background:var(--theme-soft,#fff0f6);color:var(--theme-ink,#4c1031)}
+.saq-gk-hint{margin:12px 0 0;color:var(--theme-muted,#755466);font-size:13.5px}
+.saq-gk-hint:empty{display:none}
+.saq-gk-lastrow,.saq-gk-out{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:12px}
+.saq-gk-lastrow[hidden],.saq-gk-out[hidden]{display:none}
+.saq-gk-lastlab,.saq-gk-outlab{font-size:13px;font-weight:800;color:var(--theme-ink,#4c1031)}
+.saq-gk-lchip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800}
+.saq-gk-lchip i{width:9px;height:9px;border-radius:2px;background:currentColor}
+.saq-gk-ghost{display:inline-flex;flex-wrap:wrap;gap:4px;padding:6px 11px;border:1px dashed currentColor;border-radius:12px;font-size:12.5px;font-weight:700}
+.saq-gk-ghost--missing{background:var(--theme-error-bg);color:var(--theme-error-fg)}
+.saq-gk-ghost--general_part,.saq-gk-ghost--other_act{background:var(--theme-warn-bg);color:var(--theme-warn-fg)}
+.saq-gk-ghost.is-fly{animation:saqGkFly .85s cubic-bezier(.2,.9,.3,1.2) both;animation-delay:calc(var(--i,0) * 140ms)}
+@keyframes saqGkFly{0%{opacity:0;transform:translate(-30px,-80px) rotate(-14deg) scale(.4)}60%{opacity:1;transform:translate(6px,5px) rotate(3deg) scale(1.06)}100%{opacity:1;transform:none}}
+.saq-gk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+@media(max-width:760px){
+ #saq-gkmap{padding:16px;border-radius:18px}
+ .saq-gk-grid{grid-template-columns:repeat(auto-fill,minmax(10px,1fr));gap:2px;padding:8px}
+ .saq-gk-stat{min-width:0;flex:1 1 0;padding:8px}
+ .saq-gk-stat strong{font-size:22px}
+ .saq-gk-c:hover,.saq-gk-c.is-active{transform:scale(1.9)}
+ #saq-scales{padding:14px 8px}
+ .saq-sc-load{max-width:46%}
+ .saq-sc-w{font-size:10px;padding:3px 7px 3px 6px;gap:4px}.saq-sc-w i{flex-basis:6px;width:6px;height:6px}
+ .saq-sc-label{font-size:10.5px}
+ .saq-sc-medal{width:32px;height:32px;font-size:16px}
+ .saq-sc-seal b{width:38px;height:38px;font-size:17px}.saq-sc-seal span{font-size:9.5px;padding:4px 9px}
+}
+
+/* --- card glow (mouse only) --- */
+html.saq-glow .card.saq-glow-rel{position:relative}
+html.saq-glow .card.saq-glow-card::after{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;pointer-events:none;opacity:0;transition:opacity .25s ease;background:radial-gradient(240px circle at var(--saq-mx,50%) var(--saq-my,50%),color-mix(in srgb,var(--theme-accent,#e91c79) 85%,white),transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+html.saq-glow .card.saq-glow-card:hover::after{opacity:1}
+html[data-saq-motion="reduce"].saq-glow .card.saq-glow-card::after{display:none}
+
+/* --- helper: shiny orb --- */
+.saq-helper-launch.saq-orb-launch{width:64px;height:64px;min-height:0;padding:0;gap:0;border-radius:50%;background:transparent;box-shadow:none;overflow:visible;justify-content:center}
+.saq-helper-launch.saq-orb-launch:hover{filter:none}
+.saq-orb{position:relative;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;isolation:isolate;
+ background:radial-gradient(circle at 32% 26%,#fff 0 5%,color-mix(in srgb,var(--theme-accent,#e91c79) 45%,white) 16%,var(--theme-accent,#e91c79) 46%,var(--theme-accent-2,#a5145a) 76%,color-mix(in srgb,var(--theme-accent-2,#a5145a) 62%,black) 100%);
+ box-shadow:0 0 0 3px var(--theme-bg,#fff),0 12px 30px color-mix(in srgb,var(--theme-accent-2,#a5145a) 50%,transparent),inset -7px -9px 16px rgba(0,0,0,.28),inset 5px 6px 12px rgba(255,255,255,.38);
+ animation:saqOrbFloat 5s ease-in-out infinite;transition:transform .25s ease,box-shadow .25s ease}
+.saq-orb::after{content:'';position:absolute;left:15%;top:11%;width:36%;height:24%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.95),rgba(255,255,255,0) 70%);transform:rotate(-28deg);z-index:2;pointer-events:none}
+.saq-orb-sheen{position:absolute;inset:0;border-radius:50%;overflow:hidden;z-index:1;pointer-events:none}
+.saq-orb-sheen::before{content:'';position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent 0 55%,rgba(255,255,255,.55) 63%,transparent 70%,transparent 80%,rgba(255,255,255,.3) 86%,transparent 92%);animation:saqOrbSpin 5.5s linear infinite}
+.saq-orb-star{position:relative;z-index:3;color:#fff;font-size:25px;line-height:1;text-shadow:0 0 8px rgba(255,255,255,.95),0 0 18px color-mix(in srgb,var(--theme-accent,#e91c79) 80%,white);animation:saqOrbTwinkle 3.2s ease-in-out infinite}
+.saq-orb-halo{position:absolute;inset:-7px;border-radius:50%;z-index:-1;background:radial-gradient(circle,color-mix(in srgb,var(--theme-accent,#e91c79) 40%,transparent) 0 55%,transparent 72%);animation:saqOrbHalo 3.6s ease-in-out infinite;pointer-events:none}
+.saq-orb-spark{position:absolute;inset:-9px;border-radius:50%;z-index:4;pointer-events:none;animation:saqOrbSpin 6s linear infinite}
+.saq-orb-spark:nth-of-type(2){animation-duration:8.5s;animation-direction:reverse;inset:-4px}
+.saq-orb-spark:nth-of-type(3){animation-duration:11s;inset:-13px}
+.saq-orb-spark::before{content:'';position:absolute;left:50%;top:0;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px color-mix(in srgb,var(--theme-accent,#e91c79) 70%,white)}
+.saq-orb-spark:nth-of-type(3)::before{width:3px;height:3px;margin-left:-1.5px;top:20%}
+.saq-orb-launch:hover .saq-orb,.saq-orb-launch:focus-visible .saq-orb{transform:scale(1.07);box-shadow:0 0 0 3px var(--theme-bg,#fff),0 14px 36px color-mix(in srgb,var(--theme-accent,#e91c79) 60%,transparent),inset -7px -9px 16px rgba(0,0,0,.28),inset 5px 6px 12px rgba(255,255,255,.45)}
+.saq-orb-launch:active .saq-orb{transform:scale(.96)}
+.saq-orb-launch:focus-visible{outline:none}
+.saq-orb-launch:focus-visible .saq-orb{outline:3px solid var(--theme-focus,#9a1757);outline-offset:5px}
+.saq-orb-launch .saq-helper-launch-text{position:absolute;right:calc(100% + 12px);top:50%;padding:9px 14px;border:1px solid var(--theme-border,#ebcbd9);border-radius:999px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:800 13.5px/1.15 'DM Sans',Arial,sans-serif;white-space:nowrap;box-shadow:0 10px 24px rgba(40,6,24,.18);opacity:0;transform:translate(10px,-50%);transition:opacity .25s ease,transform .25s ease;pointer-events:none}
+.saq-orb-launch:hover .saq-helper-launch-text,.saq-orb-launch:focus-visible .saq-helper-launch-text,.saq-orb-launch.is-peek .saq-helper-launch-text{opacity:1;transform:translate(0,-50%)}
+@keyframes saqOrbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes saqOrbSpin{to{transform:rotate(360deg)}}
+@keyframes saqOrbTwinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.12) rotate(12deg)}}
+@keyframes saqOrbHalo{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+.saq-orb--mini{width:36px;height:36px;flex:0 0 36px;animation:none;box-shadow:0 4px 12px color-mix(in srgb,var(--theme-accent-2,#a5145a) 40%,transparent),inset -4px -5px 9px rgba(0,0,0,.25),inset 3px 3px 7px rgba(255,255,255,.35)}
+.saq-orb--mini .saq-orb-star{font-size:15px}
+.saq-helper-head{background:linear-gradient(120deg,var(--theme-soft,#fff0f6),var(--theme-soft-2,#ffe1ed))}
+.saq-helper-id{display:flex;align-items:center;gap:10px;min-width:0}
+.saq-helper-sub{margin:1px 0 0;font-size:12px;font-weight:700;color:var(--theme-ink,#4c1031);opacity:.85}
+.saq-helper-typing{display:inline-flex;gap:5px;align-items:center;padding:12px 14px}
+.saq-helper-typing i{width:7px;height:7px;border-radius:50%;background:var(--saq-h-strong);opacity:.35;animation:saqTyping 1s ease-in-out infinite}
+.saq-helper-typing i:nth-child(2){animation-delay:.15s}.saq-helper-typing i:nth-child(3){animation-delay:.3s}
+@keyframes saqTyping{0%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+@media(max-width:760px){
+ .saq-helper-launch.saq-orb-launch{width:56px;height:56px;padding:0;min-height:0}
+ .saq-orb{width:56px;height:56px}.saq-orb-star{font-size:22px}
+ .saq-orb-launch .saq-helper-launch-text{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .saq-orb,.saq-orb-sheen::before,.saq-orb-star,.saq-orb-halo,.saq-orb-spark,.saq-helper-typing i,.saq-live-dot,.saq-live-beam::after{animation:none!important}
+ .saq-sc-aura,.saq-sc-rays,.saq-sc-sheen,.saq-sc-pan{animation:none!important}.saq-sc-sheen{display:none}
+ .saq-orb-spark{display:none}
+ html.saq-glow .card.saq-glow-card::after{display:none}
+ .saq-gk-c,.saq-orb,.saq-helper-launch-text{transition:none!important}
+ .saq-gk-c:hover,.saq-gk-c.is-active{transform:none}
+}
+@media print{#saq-gkmap,#saq-scales,.saq-live-bar{display:none!important}}
+
+/* v29: Express check — progress ring, jump dots, rows with a hint and big answer buttons */
+#check .check-meter{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px 22px;margin:0 0 14px;padding:16px 20px;border:1px solid var(--theme-border,#ebcbd9);border-radius:22px;background:linear-gradient(120deg,var(--theme-soft,#fff0f6),var(--theme-surface,#fff) 70%);box-shadow:0 14px 34px rgba(94,17,55,.07)}
+#check .cm-ring{position:relative;width:66px;height:66px;border-radius:50%}
+#check .cm-ring svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+#check .cm-track{fill:none;stroke:color-mix(in srgb,var(--theme-accent,#e91c79) 16%,transparent);stroke-width:6}
+#check .cm-arc{fill:none;stroke:var(--saq-h-strong);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .65s cubic-bezier(.3,1.2,.4,1),stroke .4s ease}
+#check .check-meter.is-done[data-grade="high"] .cm-arc{stroke:var(--theme-success-fg)}
+#check .check-meter.is-done[data-grade="mid"] .cm-arc{stroke:var(--theme-warn-fg)}
+#check .check-meter.is-done[data-grade="low"] .cm-arc{stroke:var(--theme-error-fg)}
+#check .cm-num{position:absolute;inset:0;display:flex;align-items:baseline;justify-content:center;padding-top:20px;font:700 22px/1 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031);font-variant-numeric:tabular-nums}
+#check .cm-num small{font:700 12px/1 'DM Sans',Arial,sans-serif;color:var(--theme-muted,#755466);margin-left:1px}
+#check .cm-title{display:block;margin-bottom:9px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#check .cm-dots{display:flex;flex-wrap:wrap;gap:8px}
+#check .cm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+#check .cm-dot{display:grid;place-items:center;width:30px;height:30px;padding:0;border:2px dashed color-mix(in srgb,var(--theme-accent,#e91c79) 45%,transparent);border-radius:50%;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:800 12px/1 'DM Sans',Arial,sans-serif;cursor:pointer;transition:transform .2s ease,background-color .3s ease,border-color .3s ease,color .3s ease}
+#check .cm-dot:hover{transform:translateY(-2px)}
+#check .cm-dot:focus-visible,#check .cm-go:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:2px}
+#check .cm-dot[data-state="yes"]{border:2px solid var(--theme-success-fg);background:var(--theme-success-bg);color:var(--theme-success-fg)}
+#check .cm-dot[data-state="part"]{border:2px solid var(--theme-warn-fg);background:var(--theme-warn-bg);color:var(--theme-warn-fg)}
+#check .cm-dot[data-state="no"]{border:2px solid var(--theme-error-fg);background:var(--theme-error-bg);color:var(--theme-error-fg)}
+#check .cm-tally{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+#check .cm-t{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid;border-radius:999px;font-size:12.5px;font-weight:800}
+#check .cm-t i{font-style:normal}#check .cm-t b{font-variant-numeric:tabular-nums}
+#check .cm-yes{background:var(--theme-success-bg);color:var(--theme-success-fg);border-color:color-mix(in srgb,var(--theme-success-fg) 28%,transparent)}
+#check .cm-part{background:var(--theme-warn-bg);color:var(--theme-warn-fg);border-color:color-mix(in srgb,var(--theme-warn-fg) 28%,transparent)}
+#check .cm-no{background:var(--theme-error-bg);color:var(--theme-error-fg);border-color:color-mix(in srgb,var(--theme-error-fg) 28%,transparent)}
+#check .cm-go{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:8px 16px;border:0;border-radius:999px;background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);font:800 13.5px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;box-shadow:0 10px 22px color-mix(in srgb,var(--saq-h-strong) 30%,transparent);animation:saqCmIn .5s ease-out}
+#check .cm-go[hidden]{display:none}
+#check .cm-go i{font-style:normal;animation:saqCmArrow 1.4s ease-in-out infinite}
+@keyframes saqCmIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes saqCmArrow{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+#check .check-meter.is-burst .cm-ring{animation:saqCmBurst 1.3s ease-out}
+@keyframes saqCmBurst{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--saq-h-strong) 55%,transparent)}100%{box-shadow:0 0 0 26px transparent}}
+#check .check-meter.is-burst .cm-num{animation:saqBump .5s ease-out}
+/* rows */
+#check #criteria{padding:8px;display:grid;gap:8px;overflow:visible}
+#check #criteria .criterion{position:relative;grid-template-columns:1fr auto;gap:14px 22px;padding:16px 18px 16px 16px;border:1px solid var(--theme-border,#ebcbd9);border-radius:18px;background:var(--theme-surface,#fff);transition:border-color .3s ease,background-color .3s ease,box-shadow .3s ease,transform .2s ease}
+#check #criteria .criterion::before{content:'';position:absolute;left:-1px;top:14px;bottom:14px;width:4px;border-radius:0 4px 4px 0;background:transparent;transition:background-color .3s ease}
+#check #criteria .criterion:hover{background:var(--theme-surface,#fff);box-shadow:0 10px 24px rgba(94,17,55,.08);transform:translateY(-1px)}
+#check #criteria .criterion[data-state="yes"]{border-color:color-mix(in srgb,var(--theme-success-fg) 40%,var(--theme-border,#ebcbd9));background:color-mix(in srgb,var(--theme-success-bg) 45%,var(--theme-surface,#fff))}
+#check #criteria .criterion[data-state="part"]{border-color:color-mix(in srgb,var(--theme-warn-fg) 40%,var(--theme-border,#ebcbd9));background:color-mix(in srgb,var(--theme-warn-bg) 45%,var(--theme-surface,#fff))}
+#check #criteria .criterion[data-state="no"]{border-color:color-mix(in srgb,var(--theme-error-fg) 40%,var(--theme-border,#ebcbd9));background:color-mix(in srgb,var(--theme-error-bg) 45%,var(--theme-surface,#fff))}
+#check #criteria .criterion[data-state="yes"]::before{background:var(--theme-success-fg)}#check #criteria .criterion[data-state="part"]::before{background:var(--theme-warn-fg)}#check #criteria .criterion[data-state="no"]::before{background:var(--theme-error-fg)}
+#check #criteria .question{align-items:flex-start;gap:14px;color:var(--theme-ink,#4c1031)}
+#check #criteria .num{position:relative;flex:0 0 38px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(140deg,color-mix(in srgb,var(--theme-accent,#e91c79) 14%,var(--theme-surface,#fff)),color-mix(in srgb,var(--theme-accent,#e91c79) 28%,var(--theme-surface,#fff)));color:var(--saq-h-strong);font:700 16px/1 'Playfair Display',Georgia,serif;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--theme-accent,#e91c79) 30%,transparent)}
+#check #criteria .num b{font-weight:700;transition:opacity .2s ease,transform .3s ease}
+#check #criteria .crit-ico{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;font-style:normal;font:800 17px/1 'DM Sans',Arial,sans-serif;opacity:0;transform:scale(.4) rotate(-30deg);transition:opacity .25s ease,transform .4s cubic-bezier(.3,1.6,.5,1)}
+#check #criteria .criterion[data-state] .crit-ico{background:transparent}
+#check #criteria .criterion[data-state="yes"] .crit-ico{opacity:1;transform:none;background:var(--theme-success-fg);color:var(--theme-success-bg)}
+#check #criteria .criterion[data-state="part"] .crit-ico{opacity:1;transform:none;background:var(--theme-warn-fg);color:var(--theme-warn-bg)}
+#check #criteria .criterion[data-state="no"] .crit-ico{opacity:1;transform:none;background:var(--theme-error-fg);color:var(--theme-error-bg)}
+#check #criteria .criterion[data-state="yes"] .crit-ico::before{content:'✓'}#check #criteria .criterion[data-state="part"] .crit-ico::before{content:'½'}#check #criteria .criterion[data-state="no"] .crit-ico::before{content:'✗'}
+#check #criteria .criterion:not([data-state=""]) .num b{opacity:0;transform:scale(.5)}
+#check #criteria .qtext{display:flex;flex-direction:column;gap:4px;min-width:0}
+#check #criteria .qmain{font-weight:800;font-size:15px;line-height:1.4;color:var(--theme-ink,#4c1031)}
+#check #criteria .crit-hint{font-size:12.5px;font-weight:500;line-height:1.45;color:var(--theme-muted,#755466)}
+#check #criteria .choices{display:grid;grid-template-columns:repeat(3,auto);gap:6px;padding:4px;border-radius:14px;background:color-mix(in srgb,var(--theme-accent,#e91c79) 7%,var(--theme-surface,#fff));border:1px solid var(--theme-border,#ebcbd9);align-self:center}
+#check #criteria .ch{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 14px;border-radius:10px;color:var(--theme-ink,#4c1031);font:800 13px/1.2 'DM Sans',Arial,sans-serif;white-space:nowrap;cursor:pointer;user-select:none;transition:background-color .25s ease,color .25s ease,box-shadow .25s ease,transform .15s ease}
+#check #criteria .ch input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+#check #criteria .ch-ico{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;font-size:11px;font-weight:800;line-height:1;opacity:.7;transition:opacity .2s ease,background-color .25s ease,color .25s ease,border-color .25s ease}
+#check #criteria .ch:hover{background:var(--theme-surface,#fff)}
+#check #criteria .ch:active{transform:scale(.97)}
+#check #criteria .ch:focus-within{outline:3px solid var(--theme-focus,#9a1757);outline-offset:1px}
+#check #criteria .ch:focus-within:not(:has(:focus-visible)){outline:none}
+#check #criteria .criterion[data-state="yes"] .ch-yes{background:var(--theme-success-fg);color:var(--theme-success-bg);box-shadow:0 6px 14px color-mix(in srgb,var(--theme-success-fg) 30%,transparent)}
+#check #criteria .criterion[data-state="part"] .ch-part{background:var(--theme-warn-fg);color:var(--theme-warn-bg);box-shadow:0 6px 14px color-mix(in srgb,var(--theme-warn-fg) 30%,transparent)}
+#check #criteria .criterion[data-state="no"] .ch-no{background:var(--theme-error-fg);color:var(--theme-error-bg);box-shadow:0 6px 14px color-mix(in srgb,var(--theme-error-fg) 30%,transparent)}
+#check #criteria .criterion[data-state="yes"] .ch-yes .ch-ico{opacity:1;background:var(--theme-success-bg);border-color:var(--theme-success-bg);color:var(--theme-success-fg)}
+#check #criteria .criterion[data-state="part"] .ch-part .ch-ico{opacity:1;background:var(--theme-warn-bg);border-color:var(--theme-warn-bg);color:var(--theme-warn-fg)}
+#check #criteria .criterion[data-state="no"] .ch-no .ch-ico{opacity:1;background:var(--theme-error-bg);border-color:var(--theme-error-bg);color:var(--theme-error-fg)}
+#check #criteria .ch-ico{color:inherit}
+#check #criteria .criterion[data-state="yes"] .ch-yes .ch-ico::after,#check #criteria .criterion[data-state="part"] .ch-part .ch-ico::after,#check #criteria .criterion[data-state="no"] .ch-no .ch-ico::after{content:none}
+#check #criteria .criterion.is-pop .crit-ico{animation:saqCritPop .5s cubic-bezier(.3,1.6,.5,1)}
+#check #criteria .criterion.is-pop{animation:saqCritGlow .7s ease-out}
+#check #criteria .criterion.is-flash{animation:saqCritGlow 1s ease-out}
+@keyframes saqCritPop{0%{transform:scale(.3) rotate(-40deg)}100%{transform:none}}
+@keyframes saqCritGlow{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--saq-h-strong) 40%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+@media(max-width:760px){
+ #check .check-meter{grid-template-columns:auto 1fr;padding:14px;gap:12px 14px}
+ #check .cm-tally{grid-column:1/-1;justify-content:flex-start}
+ #check .cm-dots{gap:5px}
+ #check .cm-dot{width:28px;height:28px;font-size:11px}
+ #check #criteria{padding:6px;gap:6px}
+ #check #criteria .criterion{grid-template-columns:1fr;gap:12px;padding:14px 12px}
+ #check #criteria .choices{grid-template-columns:repeat(3,1fr);padding-left:4px}
+ #check #criteria .ch{min-height:46px;padding:0 8px;font-size:12.5px}
+}
+@media(prefers-reduced-motion:reduce){#check .cm-go,#check .cm-go i,#check .check-meter.is-burst .cm-ring,#check #criteria .criterion.is-pop,#check #criteria .criterion.is-pop .crit-ico,#check #criteria .criterion.is-flash{animation:none!important}#check .cm-arc,#check #criteria .criterion,#check #criteria .ch,#check #criteria .crit-ico,#check .cm-dot{transition:none!important}}
+
+/* v29: «ИИ-лаборатория» — prompt builder and AI comparison */
+#lab .lab-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+#lab .lab-tabs{display:inline-flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:5px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-soft,#fff0f6)}
+#lab .lab-tabs [role="tab"]{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 18px;border:0;border-radius:12px;background:transparent;color:var(--theme-ink,#4c1031);font:800 14px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:background-color .25s ease,color .25s ease,box-shadow .25s ease}
+#lab .lab-tabs [role="tab"]:hover{background:var(--theme-surface,#fff)}
+#lab .lab-tabs [aria-selected="true"]{background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);box-shadow:0 8px 18px color-mix(in srgb,var(--saq-h-strong) 30%,transparent)}
+#lab [role="tab"]:focus-visible,#lab .lab-opt:focus-visible,#lab .lab-alang button:focus-visible,#lab .lab-btn:focus-visible,#lab .lab-x:focus-visible,#lab .lab-prompt:focus-visible,#lab summary:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:2px}
+#lab .lab-panel[hidden]{display:none}
+#lab .lab-lead{max-width:780px;margin:0 0 16px;color:var(--theme-muted,#755466);font-size:15px;line-height:1.6}
+#lab .lab-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px;align-items:start}
+#lab .lab-form{display:block;padding:20px;background:var(--theme-surface,#fff)}
+#lab .lab-form .field textarea{min-height:140px}
+#lab #lab-answer{min-height:150px}
+#lab .lab-group{margin:2px 0 16px}
+#lab .lab-glabel{display:block;margin-bottom:9px;font-size:13px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#lab .lab-opts{display:flex;flex-wrap:wrap;gap:8px}
+#lab .lab-opt{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:7px 13px 7px 8px;border:1px solid var(--theme-border,#ebcbd9);border-radius:999px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:700 13px/1.25 'DM Sans',Arial,sans-serif;text-align:left;cursor:pointer;transition:background-color .25s ease,border-color .25s ease,transform .15s ease}
+#lab .lab-opt:active{transform:scale(.97)}
+#lab .lab-opt i{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border:1.5px dashed color-mix(in srgb,var(--saq-h-strong) 60%,transparent);border-radius:50%;font-style:normal;font-size:12px;font-weight:800}
+#lab .lab-opt[aria-pressed="true"]{border-color:var(--saq-h-strong);background:color-mix(in srgb,var(--saq-h-strong) 9%,var(--theme-surface,#fff))}
+#lab .lab-opt[aria-pressed="true"] i{border-style:solid;border-color:var(--saq-h-strong);background:var(--saq-h-strong);color:var(--theme-on-accent,#fff)}
+#lab .lab-opt[aria-pressed="true"] i::before{content:'✓'}
+#lab .lab-alang{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--theme-border,#ebcbd9);border-radius:12px;background:var(--theme-soft,#fff0f6)}
+#lab .lab-alang button{min-height:38px;padding:6px 14px;border:0;border-radius:9px;background:transparent;color:var(--theme-ink,#4c1031);font:800 13px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer}
+#lab .lab-alang [aria-pressed="true"]{background:var(--theme-surface,#fff);color:var(--saq-h-strong);box-shadow:0 2px 8px rgba(40,6,24,.1)}
+#lab .lab-lnote{margin:9px 0 0;padding:7px 10px;border-radius:10px;background:var(--theme-warn-bg);color:var(--theme-warn-fg);font-size:12.5px;font-weight:700}
+#lab .lab-lnote[hidden]{display:none}
+#lab .lab-strength{margin-bottom:12px;padding:14px 16px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-surface,#fff)}
+#lab .lab-st-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:13.5px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#lab .lab-strength[data-lvl="0"] .lab-st-val{color:var(--theme-error-fg)}#lab .lab-strength[data-lvl="1"] .lab-st-val{color:var(--theme-warn-fg)}#lab .lab-strength[data-lvl="2"] .lab-st-val,#lab .lab-strength[data-lvl="3"] .lab-st-val{color:var(--theme-success-fg)}
+#lab .lab-st-bar{height:10px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,var(--theme-accent,#e91c79) 12%,var(--theme-surface,#fff))}
+#lab .lab-st-fill{display:block;width:0;height:100%;border-radius:inherit;background:var(--theme-error-fg);transition:width .55s cubic-bezier(.3,1.2,.4,1),background-color .3s ease}
+#lab .lab-strength[data-lvl="1"] .lab-st-fill{background:var(--theme-warn-fg)}#lab .lab-strength[data-lvl="2"] .lab-st-fill{background:var(--theme-success-fg)}
+#lab .lab-strength[data-lvl="3"] .lab-st-fill{background:linear-gradient(90deg,var(--theme-success-fg),color-mix(in srgb,var(--theme-success-fg) 55%,white),var(--theme-success-fg));background-size:200% 100%;animation:labShine 2.2s linear infinite}
+@keyframes labShine{to{background-position:-200% 0}}
+#lab .lab-st-tip{margin:8px 0 0;font-size:12.5px;color:var(--theme-ink,#4c1031);opacity:.85}
+#lab .lab-st-tip:empty{display:none}
+#lab .lab-prompt-card{overflow:hidden;border:1px solid color-mix(in srgb,var(--saq-h-strong) 35%,var(--theme-border,#ebcbd9));border-radius:18px;background:linear-gradient(180deg,var(--theme-soft,#fff0f6),var(--theme-surface,#fff) 60%);box-shadow:0 14px 30px rgba(94,17,55,.08)}
+#lab .lab-pc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--theme-border,#ebcbd9)}
+#lab .lab-pc-head b{color:var(--theme-ink,#4c1031)}
+#lab .lab-prompt{margin:0;max-height:330px;overflow:auto;padding:14px 16px;white-space:pre-wrap;word-break:break-word;font:500 13px/1.62 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--theme-text,#4c2b3d);background:transparent;border:0}
+#lab .lab-copied{margin:0;padding:0 16px 10px;font-size:12.5px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#lab .lab-copied.is-ok{color:var(--theme-success-fg)}#lab .lab-copied:empty{display:none}
+#lab .lab-steps{margin:14px 0 12px;font-size:13.5px;font-weight:700;color:var(--theme-ink,#4c1031)}
+#lab .lab-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:8px 16px;border:1px solid color-mix(in srgb,var(--saq-h-strong) 50%,var(--theme-border,#ebcbd9));border-radius:12px;background:var(--theme-surface,#fff);color:var(--saq-h-strong);font:800 13.5px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:background-color .2s ease}
+#lab .lab-btn:hover{background:color-mix(in srgb,var(--saq-h-strong) 8%,var(--theme-surface,#fff))}
+#lab .lab-btn[hidden]{display:none}
+#lab .lab-copy{min-height:36px;padding:6px 12px;font-size:12.5px}
+#lab .lab-actions{flex-wrap:wrap}
+#lab .lab-binfo,#lab .lab-cinfo{margin:8px 0 0;font-size:13.5px;font-weight:700;color:var(--theme-ink,#4c1031)}
+#lab .lab-binfo:empty,#lab .lab-cinfo:empty{display:none}
+#lab .lab-ccase{min-height:110px}
+#lab .lab-slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#lab .lab-slots.has3{grid-template-columns:repeat(3,minmax(0,1fr))}
+#lab .lab-slot{padding:16px;border:1px solid var(--theme-border,#ebcbd9);border-radius:18px;background:var(--theme-surface,#fff)}
+#lab .lab-slot-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+#lab .lab-slot-n{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);font:700 14px/1 'Playfair Display',Georgia,serif}
+#lab .lab-slot-t{color:var(--theme-ink,#4c1031)}
+#lab .lab-x{margin-left:auto;width:36px;height:36px;border:1px solid var(--theme-border,#ebcbd9);border-radius:10px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font-size:20px;line-height:1;cursor:pointer}
+#lab .lab-slot .field{margin-bottom:10px}#lab .lab-slot textarea{min-height:150px}
+#lab .lab-add{margin:12px 0 4px}
+#lab .lab-result{margin-top:22px;padding:20px;border:1px solid var(--theme-border,#ebcbd9);border-radius:22px;background:var(--theme-surface,#fff)}
+#lab .lab-result[hidden]{display:none}
+#lab .lab-res-h{margin:0 0 6px;color:var(--theme-ink,#4c1031)}
+#lab .lab-res-h:focus:not(:focus-visible){outline:none}
+#lab .lab-verdict{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:16px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#lab .lab-crown{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6e2 0,#f0cf9c 22%,#c98f55 58%,#8a5a2e 88%,#6a4120 100%);color:#4a2913;font-size:15px;box-shadow:inset 0 0 0 2px rgba(255,236,200,.55),0 6px 14px rgba(60,20,10,.25),0 0 14px rgba(255,205,150,.4)}
+#lab .lab-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#lab .lab-cards.has3{grid-template-columns:repeat(3,minmax(0,1fr))}
+#lab .lab-card{display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--theme-border,#ebcbd9);border-radius:18px;background:var(--theme-surface,#fff)}
+#lab .lab-card.is-best{border-color:color-mix(in srgb,var(--theme-success-fg) 50%,var(--theme-border,#ebcbd9));box-shadow:0 0 0 3px color-mix(in srgb,var(--theme-success-fg) 16%,transparent),0 14px 30px rgba(40,6,24,.08)}
+#lab .lab-card header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#lab .lab-card h4{margin:0;font:700 18px/1.25 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031);word-break:break-word}
+#lab .lab-place{padding:4px 10px;border-radius:999px;background:var(--theme-soft,#fff0f6);color:var(--theme-ink,#4c1031);font-size:12px;font-weight:800}
+#lab .lab-card.is-best .lab-place{background:var(--theme-success-bg);color:var(--theme-success-fg)}
+#lab .lab-score{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px}
+#lab .lab-score strong{font:700 42px/1 'Playfair Display',Georgia,serif;color:var(--saq-h-strong);font-variant-numeric:tabular-nums}
+#lab .lab-score span{font-weight:800;color:var(--saq-h-strong)}
+#lab .lab-score small{width:100%;font-size:12.5px;font-weight:700;color:var(--theme-muted,#755466)}
+#lab .lab-bar{display:flex;height:12px;overflow:hidden;border-radius:999px;background:color-mix(in srgb,var(--theme-accent,#e91c79) 10%,var(--theme-surface,#fff))}
+#lab .lab-seg{display:block;height:100%;width:var(--w)}
+#lab .lab-seg--confirmed,#lab .lab-cnt--confirmed i{background:var(--theme-success-fg)}#lab .lab-seg--partial,#lab .lab-cnt--partial i{background:var(--theme-warn-fg)}#lab .lab-seg--contradicts,#lab .lab-cnt--contradicts i{background:var(--theme-error-fg)}#lab .lab-seg--unverified,#lab .lab-cnt--unverified i{background:var(--theme-muted,#755466)}
+#lab .lab-counts{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin:0;padding:0;list-style:none;font-size:12.5px;color:var(--theme-ink,#4c1031)}
+#lab .lab-cnt i{display:inline-block;width:9px;height:9px;margin-right:6px;border-radius:2px}
+#lab .lab-flags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+#lab .lab-flag{padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700}
+#lab .lab-flag--missing{background:var(--theme-error-bg);color:var(--theme-error-fg)}#lab .lab-flag--general_part,#lab .lab-flag--other_act{background:var(--theme-warn-bg);color:var(--theme-warn-fg)}
+#lab .lab-claims{margin:0;font-size:12.5px;color:var(--theme-muted,#755466)}
+#lab .lab-card .lab-btn{align-self:flex-start;margin-top:auto}
+#lab .is-anim .lab-card{animation:labCardIn .55s ease-out both;animation-delay:calc(var(--d,0) * 120ms)}
+#lab .is-anim .lab-seg{animation:labGrow 1s cubic-bezier(.3,1,.4,1) both;animation-delay:calc(var(--d,0) * 140ms + .15s)}
+@keyframes labCardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes labGrow{from{width:0}}
+#lab .lab-tablewrap{margin-top:14px}
+#lab .lab-tablewrap summary{display:flex;align-items:center;min-height:40px;font-weight:800;color:var(--saq-h-strong);cursor:pointer}
+#lab .lab-tscroll{overflow-x:auto}
+#lab .lab-table{width:100%;border-collapse:collapse;font-size:13px}
+#lab .lab-table th,#lab .lab-table td{padding:8px 10px;border-bottom:1px solid var(--theme-border,#ebcbd9);color:var(--theme-text,#4c2b3d);text-align:left}
+#lab .lab-table thead th,#lab .lab-table tbody th{color:var(--theme-ink,#4c1031)}
+#lab .lab-note,#lab .lab-privacy{margin:12px 0 0;font-size:12.5px;color:var(--theme-muted,#755466)}
+#lab .lab-privacy{margin-top:22px}
+@media(max-width:900px){#lab .lab-grid,#lab .lab-slots.has3,#lab .lab-cards.has3{grid-template-columns:1fr}}
+@media(max-width:760px){
+ #lab .lab-tabs{display:flex}#lab .lab-tabs [role="tab"]{flex:1 1 0;justify-content:center;padding:8px 10px;font-size:13px}
+ #lab .lab-slots,#lab .lab-cards{grid-template-columns:1fr}
+ #lab .lab-form{padding:16px}
+ #lab .lab-prompt{max-height:260px;font-size:12.5px}
+}
+@media(prefers-reduced-motion:reduce){#lab .is-anim .lab-card,#lab .is-anim .lab-seg,#lab .lab-strength[data-lvl="3"] .lab-st-fill{animation:none!important}#lab .lab-st-fill,#lab .lab-opt,#lab [role="tab"]{transition:none!important}}
+/* ===== v29: search on the map of the Special Part ===== */
+.saq-gk-search{margin:18px 0 4px}
+.saq-gk-slab{display:block;margin-bottom:7px;font-size:13px;font-weight:800;color:var(--theme-ink,#4c1031)}
+.saq-gk-sbox{position:relative;display:flex;align-items:center;max-width:640px}
+.saq-gk-sicon{position:absolute;left:14px;font-size:18px;line-height:1;color:var(--saq-h-strong);pointer-events:none}
+#saq-gk-q{width:100%;min-height:46px;padding:10px 44px 10px 42px;border:1.5px solid var(--theme-border,#ebcbd9);border-radius:14px;background:var(--theme-bg,#fffdf9);color:var(--theme-ink,#4c1031);font:600 15px/1.3 'DM Sans',Arial,sans-serif;-webkit-appearance:none;appearance:none;transition:border-color .2s ease,box-shadow .2s ease}
+#saq-gk-q::placeholder{color:var(--theme-muted,#755466);opacity:1}
+#saq-gk-q:focus{outline:none;border-color:var(--saq-h-strong);box-shadow:0 0 0 4px color-mix(in srgb,var(--saq-h-strong) 18%,transparent)}
+#saq-gk-q::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.saq-gk-sx{position:absolute;right:6px;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:10px;background:transparent;color:var(--theme-ink,#4c1031);font-size:22px;line-height:1;cursor:pointer}
+.saq-gk-sx:hover{background:var(--theme-soft,#fff0f6)}.saq-gk-sx[hidden]{display:none}
+.saq-gk-sugg{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.saq-gk-tryl{margin-right:2px;font-size:12.5px;font-weight:800;color:var(--theme-muted,#755466)}
+.saq-gk-schip,.saq-gk-syn{min-height:32px;padding:4px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:999px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:700 12.5px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:background-color .2s ease,border-color .2s ease}
+.saq-gk-schip:hover,.saq-gk-syn:hover{border-color:var(--saq-h-strong);background:color-mix(in srgb,var(--saq-h-strong) 8%,var(--theme-surface,#fff))}
+.saq-gk-syn{border-color:var(--saq-h-strong);color:var(--saq-h-strong)}
+.saq-gk-snote{margin:8px 0 0;font-size:12.5px;color:var(--theme-muted,#755466)}.saq-gk-snote[hidden]{display:none}
+.saq-gk-sx:focus-visible,.saq-gk-schip:focus-visible,.saq-gk-syn:focus-visible,.saq-gk-rmap:focus-visible,.saq-gk-rmore:focus-visible,.saq-gk-rn:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:2px}
+.saq-gk-grid.has-found .saq-gk-c:not(.is-found):not(.is-lit){opacity:.16}
+.saq-gk-c.is-found{z-index:2;transform:scale(1.2);box-shadow:0 0 0 2px var(--theme-surface,#fff),0 0 0 3.5px var(--saq-h-strong),0 0 14px 2px color-mix(in srgb,var(--saq-h-strong) 45%,transparent)}
+.saq-gk-c.is-found:hover,.saq-gk-c.is-found.is-active{transform:scale(1.7)}
+.saq-gk-c.is-found:not(.is-lit){background:var(--saq-h-strong)!important}
+.saq-gk-res{margin-top:14px;padding:14px 16px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-bg,#fffdf9)}
+.saq-gk-res[hidden]{display:none}
+.saq-gk-rmsg{margin:0;font-size:14px;color:var(--theme-ink,#4c1031)}
+.saq-gk-rhint,.saq-gk-rsyn{margin:6px 0 0;font-size:13px;color:var(--theme-muted,#755466)}
+.saq-gk-rtop{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0;font-size:12.5px;color:var(--theme-muted,#755466)}
+.saq-gk-rtop>span:first-child{font-weight:800}
+.saq-gk-rch{padding:2px 9px;border-radius:999px;background:var(--theme-soft,#fff0f6);color:var(--theme-ink,#4c1031);font-weight:700}
+.saq-gk-rlist{display:grid;gap:8px;margin:12px 0 0;padding:0;list-style:none}
+.saq-gk-r{padding:11px 13px;border:1px solid var(--theme-border,#ebcbd9);border-radius:13px;background:var(--theme-surface,#fff)}
+.saq-gk-rhead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.saq-gk-rn{font-weight:800;font-size:13px;color:var(--saq-h-strong);text-decoration:none;white-space:nowrap}
+a.saq-gk-rn:hover{text-decoration:underline}
+.saq-gk-rti{flex:1 1 220px;font-size:13.5px;color:var(--theme-ink,#4c1031)}
+.saq-gk-rtag{padding:1px 8px;border-radius:999px;background:var(--theme-soft,#fff0f6);color:var(--theme-ink,#4c1031);font-size:11.5px;font-weight:800}
+.saq-gk-rmap{margin-left:auto;min-height:32px;padding:4px 11px;border:1px solid color-mix(in srgb,var(--saq-h-strong) 45%,var(--theme-border,#ebcbd9));border-radius:10px;background:transparent;color:var(--saq-h-strong);font:800 12.5px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;white-space:nowrap}
+.saq-gk-rmap:hover{background:color-mix(in srgb,var(--saq-h-strong) 8%,var(--theme-surface,#fff))}
+.saq-gk-rsn{margin:7px 0 0;font-size:13.5px;line-height:1.55;color:var(--theme-text,#4c2b3d)}
+.saq-gk-rsn mark,.at-tl blockquote mark,.at-gtext mark{padding:0 3px;border-radius:4px;background:color-mix(in srgb,var(--theme-accent,#e91c79) 20%,transparent);color:var(--theme-ink,#4c1031);font-weight:800}
+.saq-gk-rmore{margin-top:10px;min-height:38px;padding:6px 14px;border:1px solid color-mix(in srgb,var(--saq-h-strong) 50%,var(--theme-border,#ebcbd9));border-radius:12px;background:var(--theme-surface,#fff);color:var(--saq-h-strong);font:800 13px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer}
+.saq-gk-rmore[hidden]{display:none}
+.saq-gk-sr-only,.at-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.saq-gk-tipacts{display:flex;flex-wrap:wrap;gap:4px 14px}
+html[data-saq-theme="dark"] .saq-gk-rsn mark,html[data-saq-theme="dark"] .at-tl blockquote mark,html[data-saq-theme="dark"] .at-gtext mark{background:color-mix(in srgb,var(--theme-accent,#f16eac) 30%,transparent);color:var(--theme-ink,#fff)}
+
+/* ===== v29: «Атлас ГК» ===== */
+#atlas{--at-gold:#a8741f;--at-mid:color-mix(in srgb,var(--theme-accent,#e91c79) 50%,#a8741f)}
+html[data-saq-theme="dark"] #atlas{--at-gold:#e2bb73;--at-mid:color-mix(in srgb,var(--theme-accent,#f16eac) 50%,#e2bb73)}
+#atlas .at-tabs{display:inline-flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;padding:5px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-soft,#fff0f6)}
+#atlas .at-tabs [role="tab"]{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 18px;border:0;border-radius:12px;background:transparent;color:var(--theme-ink,#4c1031);font:800 14px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:background-color .25s ease,color .25s ease,box-shadow .25s ease}
+#atlas .at-tabs [role="tab"]:hover{background:var(--theme-surface,#fff)}
+#atlas .at-tabs [aria-selected="true"]{background:var(--saq-h-strong);color:var(--theme-on-accent,#fff);box-shadow:0 8px 18px color-mix(in srgb,var(--saq-h-strong) 30%,transparent)}
+#atlas [role="tab"]:focus-visible,#atlas .at-btn:focus-visible,#atlas .at-chip:focus-visible,#atlas .at-fact:focus-visible,#atlas .at-gopt:focus-visible,#atlas .at-schip:focus-visible,#atlas .at-art:focus-visible,#atlas .at-sky:focus-visible,#atlas input:focus-visible,#atlas .at-sel-n:focus-visible{outline:3px solid var(--theme-focus,#9a1757);outline-offset:2px}
+#atlas .at-sky:focus{outline:none}#atlas .at-sky:focus-visible{outline-offset:4px}
+#atlas .at-auto{display:flex;gap:10px;max-width:880px;margin:0 0 18px;padding:10px 14px;border:1px solid var(--theme-border,#ebcbd9);border-radius:14px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font-size:13px;line-height:1.5}
+#atlas .at-auto::before{content:'✶';color:var(--saq-h-strong);font-weight:800}
+#atlas .at-loading{margin:0 0 12px;color:var(--theme-muted,#755466);font-size:14px}#atlas .at-loading[hidden],#atlas .at-panel[hidden]{display:none}
+#atlas .at-card{padding:22px;border:1px solid var(--theme-border,#ebcbd9);border-radius:22px;background:var(--theme-surface,#fff);color:var(--theme-text,#4c2b3d)}
+#atlas .at-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 22px;flex-wrap:wrap}
+#atlas .at-h{margin:0;color:var(--theme-ink,#4c1031)}
+#atlas .at-lead{max-width:640px;margin:6px 0 0;color:var(--theme-muted,#755466);font-size:14px;line-height:1.55}
+#atlas .at-stats{display:flex;gap:10px;flex-wrap:wrap}
+#atlas .at-stat{min-width:92px;max-width:150px;padding:10px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-soft,#fff0f6);text-align:center}
+#atlas .at-stat strong{display:block;font:700 28px/1.1 'Playfair Display',Georgia,serif;color:var(--saq-h-strong);font-variant-numeric:tabular-nums}
+#atlas .at-stat span{display:block;margin-top:2px;font-size:12px;font-weight:800;line-height:1.3;color:var(--theme-ink,#4c1031)}
+#atlas .at-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:8px 16px;border:1px solid color-mix(in srgb,var(--saq-h-strong) 50%,var(--theme-border,#ebcbd9));border-radius:12px;background:var(--theme-surface,#fff);color:var(--saq-h-strong);font:800 13.5px/1.2 'DM Sans',Arial,sans-serif;text-decoration:none;cursor:pointer;transition:background-color .2s ease,transform .15s ease}
+#atlas .at-btn:hover{background:color-mix(in srgb,var(--saq-h-strong) 8%,var(--theme-surface,#fff))}
+#atlas .at-btn.primary{border-color:var(--saq-h-strong);background:var(--saq-h-strong);color:var(--theme-on-accent,#fff)}
+#atlas .at-btn.primary:hover{background:color-mix(in srgb,var(--saq-h-strong) 88%,black)}
+#atlas .at-btn:active{transform:scale(.97)}
+#atlas .at-btn[hidden]{display:none}
+#atlas .at-qnote{margin:10px 0 0;font-size:12.5px;font-style:italic;color:var(--theme-muted,#755466)}
+#atlas .c1{--c:var(--theme-accent,#e91c79)}#atlas .c2{--c:var(--at-mid)}#atlas .c3{--c:var(--at-gold)}
+/* facts */
+#atlas .at-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0 6px}
+#atlas .at-fact{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 14px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-bg,#fffdf9);color:var(--theme-ink,#4c1031);font:inherit;text-align:left;cursor:pointer;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+#atlas button.at-fact:hover{border-color:var(--saq-h-strong);transform:translateY(-2px);box-shadow:0 10px 22px color-mix(in srgb,var(--saq-h-strong) 14%,transparent)}
+#atlas .at-fact--plain{cursor:default}
+#atlas .at-fact-k{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--theme-muted,#755466)}
+#atlas .at-fact b{font:700 20px/1.2 'Playfair Display',Georgia,serif;color:var(--saq-h-strong)}
+#atlas .at-fact small{font-size:12.5px;line-height:1.4;color:var(--theme-muted,#755466)}
+/* scale */
+#atlas .at-tl-scroll{margin:8px -6px 0;padding:0 6px 6px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+#atlas .at-tl-plot{position:relative;min-width:620px;height:238px;margin:0 18px}
+#atlas .at-tl-cols{position:absolute;left:0;right:0;top:0;bottom:56px}
+#atlas .at-tl-col{position:absolute;bottom:0;display:flex;flex-direction:column-reverse;align-items:center;gap:3px;width:16px;padding:4px 0;border:0;border-radius:9px;background:transparent;transform:translateX(-50%);cursor:pointer;transition:background-color .2s ease}
+#atlas .at-tl-col i{display:block;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1.5px var(--theme-surface,#fff);transition:transform .2s ease}
+#atlas .at-tl-col em{order:99;font-style:normal;font-size:10.5px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#atlas .at-tl-col:hover,#atlas .at-tl-col.is-on{background:color-mix(in srgb,var(--c) 16%,transparent)}
+#atlas .at-tl-col:hover i{transform:scale(1.18)}
+#atlas .at-tl-col.is-on{box-shadow:0 0 0 2px var(--c)}
+#atlas .at-tl-col.is-on i{box-shadow:0 0 0 1.5px var(--theme-surface,#fff),0 0 10px color-mix(in srgb,var(--c) 70%,transparent)}
+#atlas .at-tl-axis{position:absolute;left:0;right:0;bottom:40px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--theme-accent,#e91c79),var(--at-mid),var(--at-gold))}
+#atlas .at-tl-tick{position:absolute;top:-5px;width:2px;height:13px;border-radius:2px;background:var(--theme-ink,#4c1031);transform:translateX(-50%)}
+#atlas .at-tl-tick span{position:absolute;top:17px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:800;white-space:nowrap;color:var(--theme-ink,#4c1031)}
+#atlas .at-tl-dir{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--theme-muted,#755466)}
+#atlas .at-tl-scrollhint{display:none;margin:4px 0 0;font-size:12px;color:var(--theme-muted,#755466)}
+#atlas .at-chips{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 18px}
+#atlas .at-chip{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:5px 8px 5px 11px;border:1px solid var(--theme-border,#ebcbd9);border-radius:999px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:700 13px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:background-color .2s ease,border-color .2s ease}
+#atlas .at-chip::before{content:'';flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:var(--c)}
+#atlas .at-chip b{min-width:22px;padding:1px 7px;border-radius:999px;background:var(--theme-soft,#fff0f6);font-size:11.5px;text-align:center}
+#atlas .at-chip:hover{border-color:var(--saq-h-strong)}
+#atlas .at-chip[aria-pressed="true"]{border-color:var(--saq-h-strong);background:color-mix(in srgb,var(--saq-h-strong) 10%,var(--theme-surface,#fff));box-shadow:0 0 0 1px var(--saq-h-strong)}
+#atlas .at-tl-detail{padding-top:16px;border-top:1px solid var(--theme-border,#ebcbd9)}
+#atlas .at-dhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+#atlas .at-dval{font:700 28px/1.15 'Playfair Display',Georgia,serif;color:var(--saq-h-strong)}
+#atlas .at-dhead span{font-size:13.5px;font-weight:700;color:var(--theme-muted,#755466)}
+#atlas .at-norms{display:grid;gap:10px;margin:12px 0 0;padding:0;list-style:none}
+#atlas .at-norms li{padding:12px 14px;border:1px solid var(--theme-border,#ebcbd9);border-radius:14px;background:var(--theme-bg,#fffdf9)}
+#atlas .at-norm-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+#atlas .at-art{font-size:13px;font-weight:800;color:var(--saq-h-strong);text-decoration:none;white-space:nowrap}
+#atlas a.at-art:hover{text-decoration:underline}
+#atlas .at-norm-ti{font-size:13.5px;font-weight:700;color:var(--theme-ink,#4c1031)}
+#atlas .at-norms blockquote{margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--theme-text,#4c2b3d)}
+#atlas .at-more{margin-top:12px}
+/* game */
+#atlas .at-gscore{display:grid;justify-items:center;gap:2px;min-width:86px}
+#atlas .at-gscore svg{width:64px;height:64px;transform:rotate(-90deg)}
+#atlas .at-gs-track{fill:none;stroke:color-mix(in srgb,var(--theme-accent,#e91c79) 14%,var(--theme-surface,#fff));stroke-width:6}
+#atlas .at-gs-arc{fill:none;stroke:var(--saq-h-strong);stroke-width:6;stroke-linecap:round;stroke-dasharray:calc(var(--p) * 169.65) 169.65;transition:stroke-dasharray .6s cubic-bezier(.3,1.2,.4,1)}
+#atlas .at-gs-arc.is-zero{stroke-opacity:0}
+#atlas .at-gscore b{grid-row:1;grid-column:1;align-self:center;font:700 21px/1 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031)}
+#atlas .at-gscore b small{font-size:12px;color:var(--theme-muted,#755466)}
+#atlas .at-gscore svg{grid-row:1;grid-column:1}
+#atlas .at-gscore span{font-size:11.5px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#atlas .at-gprog{display:flex;gap:6px;margin:18px 0 14px;padding:0;list-style:none}
+#atlas .at-gprog li{flex:1;height:6px;border-radius:3px;background:color-mix(in srgb,var(--theme-accent,#e91c79) 14%,var(--theme-surface,#fff));transition:background-color .3s ease}
+#atlas .at-gprog li.ok{background:var(--theme-success-fg)}#atlas .at-gprog li.no{background:var(--theme-error-fg)}
+#atlas .at-gprog li.cur{background:var(--saq-h-strong);animation:atPulse 1.6s ease-in-out infinite}
+@keyframes atPulse{50%{opacity:.45}}
+#atlas .at-gmeta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;font-weight:800;color:var(--theme-muted,#755466)}
+#atlas .at-gmeta span:first-child{color:var(--saq-h-strong)}
+#atlas .at-gtext{margin:12px 0 16px;padding:18px 20px;border-left:3px solid var(--saq-h-strong);border-radius:0 16px 16px 0;background:var(--theme-soft,#fff0f6);color:var(--theme-ink,#4c1031);font:500 16.5px/1.65 'Playfair Display',Georgia,serif}
+#atlas .at-blank{display:inline-block;min-width:6.5em;margin:0 2px;padding:0 6px;border-bottom:2px dashed var(--saq-h-strong);color:var(--saq-h-strong);font:800 15px/1.4 'DM Sans',Arial,sans-serif;text-align:center;animation:atPulse 2s ease-in-out infinite}
+#atlas .at-gtext.is-revealed mark{animation:atReveal .7s ease-out}
+@keyframes atReveal{from{background:var(--saq-h-strong);color:var(--theme-on-accent,#fff)}}
+#atlas .at-gopts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#atlas .at-gopt{display:flex;align-items:center;gap:12px;min-height:54px;padding:10px 14px;border:1.5px solid var(--theme-border,#ebcbd9);border-radius:14px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:800 15px/1.25 'DM Sans',Arial,sans-serif;text-align:left;cursor:pointer;transition:border-color .2s ease,transform .15s ease,box-shadow .2s ease,background-color .2s ease,opacity .2s ease}
+#atlas .at-gopt i{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border:1.5px solid color-mix(in srgb,var(--saq-h-strong) 55%,transparent);border-radius:50%;font-style:normal;font-size:12.5px;color:var(--saq-h-strong)}
+#atlas .at-gopt:not([aria-disabled]):hover{border-color:var(--saq-h-strong);transform:translateY(-2px);box-shadow:0 10px 22px color-mix(in srgb,var(--saq-h-strong) 14%,transparent)}
+#atlas .at-gopt[aria-disabled]{cursor:default}
+#atlas .at-gopt.is-right{border-color:var(--theme-success-fg);background:var(--theme-success-bg);color:var(--theme-success-fg)}
+#atlas .at-gopt.is-right i{border-color:var(--theme-success-fg);background:var(--theme-success-fg);color:var(--theme-surface,#fff)}
+#atlas .at-gopt.is-wrong{border-color:var(--theme-error-fg);background:var(--theme-error-bg);color:var(--theme-error-fg);animation:atShake .4s ease}
+#atlas .at-gopt.is-wrong i{border-color:var(--theme-error-fg);background:var(--theme-error-fg);color:var(--theme-surface,#fff)}
+#atlas .at-gopt.is-dim{border-style:dashed;color:var(--theme-muted,#755466)}#atlas .at-gopt.is-dim i{border-color:var(--theme-border,#ebcbd9);color:var(--theme-muted,#755466)}
+@keyframes atShake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+#atlas .at-gfb p{margin:14px 0 0;font-size:14px;line-height:1.6;color:var(--theme-text,#4c2b3d)}
+#atlas .at-gfb b.ok{color:var(--theme-success-fg)}#atlas .at-gfb b.no{color:var(--theme-error-fg)}
+#atlas .at-gfb q{font-weight:800;color:var(--theme-ink,#4c1031)}
+#atlas .at-gti{color:var(--theme-muted,#755466)}
+#atlas .at-gnav{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+#atlas .at-gres{padding:6px 0 4px;text-align:center}
+#atlas .at-gres h4{margin:0;font:700 22px/1.2 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031)}
+#atlas .at-gres-big{margin:6px 0;font:700 56px/1 'Playfair Display',Georgia,serif;color:var(--saq-h-strong)}
+#atlas .at-gres p{margin:8px auto 0;max-width:520px;color:var(--theme-text,#4c2b3d)}
+#atlas .at-gres .at-gbest{font-size:13px;font-weight:700;color:var(--theme-muted,#755466)}
+#atlas .at-gres .at-gnav{justify-content:center}
+/* constellation */
+#atlas .at-sky-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,1fr);gap:24px;align-items:start;margin-top:20px}
+#atlas .at-sky-wrap{position:relative}
+#atlas .at-sky{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:28px;box-shadow:0 24px 50px rgba(30,6,20,.28);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#atlas .at-neb0{stop-color:color-mix(in srgb,var(--theme-accent,#e91c79) 34%,#1d0a19)}#atlas .at-neb1{stop-color:#180915}#atlas .at-neb2{stop-color:#0c0510}
+#atlas .at-stars circle{fill:#fff;opacity:.5}
+#atlas .at-stars .tw{animation:atTw 3.8s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes atTw{50%{opacity:.08}}
+#atlas .at-sec{fill:none;stroke-width:calc(var(--u,1.4) * 3.5px);stroke-linecap:round}
+#atlas .at-sec.s0{stroke:color-mix(in srgb,var(--theme-accent,#e91c79) 72%,white)}#atlas .at-dot.s0{fill:color-mix(in srgb,var(--theme-accent,#e91c79) 72%,white)}
+#atlas .at-sec.s1{stroke:color-mix(in srgb,var(--theme-accent,#e91c79) 38%,white)}#atlas .at-dot.s1{fill:color-mix(in srgb,var(--theme-accent,#e91c79) 38%,white)}
+#atlas .at-sec.s2{stroke:#e8c27f}#atlas .at-dot.s2{fill:#e8c27f}
+#atlas .at-sec.s3{stroke:#8ec9e8}#atlas .at-dot.s3{fill:#8ec9e8}
+#atlas .at-sec-gp{fill:none;stroke:rgba(225,215,255,.35);stroke-width:calc(var(--u,1.4) * 2px);stroke-dasharray:calc(var(--u,1.4) * 2px) calc(var(--u,1.4) * 6px);stroke-linecap:round}
+#atlas .at-dot{stroke:none;opacity:.45}
+#atlas .at-gpdot{fill:rgba(225,215,255,.28)}
+#atlas .at-e{fill:none;stroke:rgba(243,214,160,.44);stroke-width:calc(var(--u,1.4) * 1px);transition:opacity .35s ease,stroke .35s ease}
+#atlas .at-e.k-gp,#atlas .at-e.k-gprange,#atlas .at-e.k-mixrange{stroke:rgba(200,188,255,.24)}
+#atlas .at-sky.is-small .at-lab.sec{display:none}
+#atlas .at-sky.is-on .at-e{opacity:.07}
+#atlas .at-sky.is-on .at-e.is-out,#atlas .at-sky.is-on .at-e.is-in{opacity:1;stroke-width:calc(var(--u,1.4) * 2.2px)}
+#atlas .at-e.is-out{stroke:#ffd58c}#atlas .at-e.is-in{stroke:color-mix(in srgb,var(--theme-accent,#e91c79) 45%,white)}
+#atlas .at-sky.is-draw .at-e.is-out,#atlas .at-sky.is-draw .at-e.is-in{stroke-dasharray:1;stroke-dashoffset:1;animation:atDraw .9s cubic-bezier(.3,.7,.2,1) forwards}
+#atlas .at-sky.is-draw .at-e.is-in{animation-delay:.12s}
+@keyframes atDraw{to{stroke-dashoffset:0}}
+#atlas .at-rangearc{fill:none;stroke:#ffd58c;stroke-width:calc(var(--u,1.4) * 4px);stroke-linecap:round;opacity:.9}
+#atlas .at-node{fill:#fff2da;transition:opacity .3s ease}
+#atlas .at-gpnode{fill:rgba(215,205,255,.75)}
+#atlas .at-sky.is-on .at-node:not(.is-sel):not(.is-peer):not(.is-hov){opacity:.32}
+#atlas .at-node.is-sel,#atlas .at-node.is-hov{fill:#ffd58c}
+#atlas .at-node.is-peer{fill:#fff}
+#atlas .at-lab{fill:rgba(255,240,248,.82);font:700 calc(var(--u,1.4) * 11px) 'DM Sans',Arial,sans-serif}
+#atlas .at-lab.gp{fill:rgba(225,215,255,.8)}#atlas .at-lab.sec{fill:rgba(255,240,248,.62);font-size:calc(var(--u,1.4) * 10px);letter-spacing:.04em}
+#atlas .at-center{transform-box:view-box;transform-origin:400px 400px;transform:scale(var(--cs,1))}
+#atlas .at-c-big{fill:#fff;font:700 44px 'Playfair Display',Georgia,serif}
+#atlas .at-c-sm,#atlas .at-c-sm2{fill:rgba(255,240,248,.78);font:700 17px 'DM Sans',Arial,sans-serif;letter-spacing:.03em}
+#atlas .at-sky.is-intro .at-edges,#atlas .at-sky.is-intro .at-nodes{opacity:0}
+#atlas .at-sky.is-play .at-edges{animation:atFade 1.8s .5s ease forwards}
+#atlas .at-sky.is-play .at-nodes{animation:atFade .9s .2s ease forwards}
+#atlas .at-sky.is-play .at-sec{stroke-dasharray:1;stroke-dashoffset:1;animation:atDraw 1.4s cubic-bezier(.4,.1,.2,1) forwards}
+@keyframes atFade{to{opacity:1}}
+#atlas .at-sky-tip{position:absolute;z-index:6;width:max-content;max-width:min(280px,100%);padding:9px 12px;border:1px solid var(--theme-border,#ebcbd9);border-radius:12px;background:var(--theme-surface,#fff);color:var(--theme-text,#4c2b3d);box-shadow:0 14px 32px rgba(40,6,24,.25);font-size:13px;line-height:1.4;pointer-events:none}
+#atlas .at-sky-tip[hidden]{display:none}
+#atlas .at-sky-tip b{display:block;color:var(--theme-ink,#4c1031)}#atlas .at-sky-tip b span{font-weight:700}
+#atlas .at-sky-tip small{display:block;margin-top:3px;font-size:12px;font-weight:800;color:var(--theme-muted,#755466)}
+#atlas .at-sky-find label{display:block;margin-bottom:7px;font-size:13px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#atlas .at-sky-frow,#atlas .at-sky-frow2{display:flex;flex-wrap:wrap;gap:8px}
+#atlas .at-sky-frow2{margin-top:8px}
+#atlas #at-sky-n{width:120px;min-height:42px;padding:8px 12px;border:1.5px solid var(--theme-border,#ebcbd9);border-radius:12px;background:var(--theme-bg,#fffdf9);color:var(--theme-ink,#4c1031);font:700 15px/1.2 'DM Sans',Arial,sans-serif}
+#atlas #at-sky-n:focus{outline:none;border-color:var(--saq-h-strong);box-shadow:0 0 0 4px color-mix(in srgb,var(--saq-h-strong) 18%,transparent)}
+#atlas .at-sky-ferr{margin:8px 0 0;font-size:13px;font-weight:700;color:var(--theme-error-fg)}#atlas .at-sky-ferr:empty{display:none}
+#atlas .at-sky-info{margin-top:16px}
+#atlas .at-sky-info h4{display:flex;align-items:center;gap:8px;margin:16px 0 8px;font-size:13px;font-weight:800;color:var(--theme-ink,#4c1031)}
+#atlas .at-sky-help{margin:0;font-size:14px;line-height:1.55;color:var(--theme-muted,#755466)}
+#atlas .at-sel-head{padding:14px 16px;border:1px solid var(--theme-border,#ebcbd9);border-radius:16px;background:var(--theme-soft,#fff0f6)}
+#atlas .at-sel-n{display:block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--saq-h-strong)}
+#atlas .at-sel-head b{display:block;margin-top:3px;font:700 19px/1.3 'Playfair Display',Georgia,serif;color:var(--theme-ink,#4c1031)}
+#atlas .at-sel-head small{display:block;margin-top:4px;font-size:12.5px;color:var(--theme-muted,#755466)}
+#atlas .at-sel-head+.at-sky-help{margin-top:12px}
+#atlas .at-ln{display:inline-block;width:18px;height:3px;border-radius:2px}
+#atlas .at-ln.out{background:var(--at-gold)}#atlas .at-ln.in{background:var(--theme-accent,#e91c79)}
+#atlas .at-schips{display:flex;flex-wrap:wrap;gap:6px}
+#atlas .at-schip{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:5px 11px;border:1px solid var(--theme-border,#ebcbd9);border-radius:999px;background:var(--theme-surface,#fff);color:var(--theme-ink,#4c1031);font:700 13px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:border-color .2s ease,background-color .2s ease}
+#atlas .at-schip b{font-size:12px;color:var(--theme-muted,#755466)}
+#atlas button.at-schip:hover{border-color:var(--saq-h-strong);background:color-mix(in srgb,var(--saq-h-strong) 8%,var(--theme-surface,#fff))}
+#atlas .at-schip.out{border-color:color-mix(in srgb,var(--at-gold) 55%,var(--theme-border,#ebcbd9))}
+#atlas .at-schip.in{border-color:color-mix(in srgb,var(--theme-accent,#e91c79) 50%,var(--theme-border,#ebcbd9))}
+#atlas .at-schip.gp{border-style:dashed;cursor:default;color:var(--theme-muted,#755466)}
+#atlas .at-none{font-size:13px;color:var(--theme-muted,#755466)}
+#atlas .at-sel-range{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0 0;font-size:13px;font-weight:700;color:var(--theme-ink,#4c1031)}
+#atlas .at-adilet{margin-top:16px}
+#atlas .at-sky-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:20px;padding-top:14px;border-top:1px solid var(--theme-border,#ebcbd9);font-size:12.5px;font-weight:700;color:var(--theme-ink,#4c1031)}
+#atlas .at-lg{display:inline-flex;align-items:center;gap:7px}
+#atlas .at-sw{display:inline-block;flex:0 0 12px;width:12px;height:12px;border-radius:3px;background:currentColor}
+#atlas .at-sw.s0{background:color-mix(in srgb,var(--theme-accent,#e91c79) 72%,white)}#atlas .at-sw.s1{background:color-mix(in srgb,var(--theme-accent,#e91c79) 38%,white)}#atlas .at-sw.s2{background:#e8c27f}#atlas .at-sw.s3{background:#8ec9e8}
+#atlas .at-sw.gp{border:1.5px dashed #8d80c4;background:transparent}
+@media(max-width:900px){#atlas .at-sky-grid{grid-template-columns:1fr}#atlas .at-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){#atlas .at-tl-scrollhint{display:block}#atlas .at-card{padding:16px}#atlas .at-gtext{padding:14px 15px;font-size:15.5px}}
+@media(max-width:560px){#atlas .at-gopts{grid-template-columns:1fr}#atlas .at-tabs{display:flex}#atlas .at-tabs [role="tab"]{flex:1 1 auto;justify-content:center;padding:8px 12px}#atlas .at-stat{min-width:84px}#atlas .at-sky{border-radius:20px}}
+@media(prefers-reduced-motion:reduce){#atlas *,#atlas *::before{animation:none!important;transition:none!important}#atlas .at-sky.is-intro .at-edges,#atlas .at-sky.is-intro .at-nodes{opacity:1}.saq-gk-c.is-found{transition:none}}
+html[data-saq-motion="reduce"] #atlas *,html[data-saq-motion="reduce"] #atlas *::before{animation:none!important;transition:none!important}
+html[data-saq-motion="reduce"] #atlas .at-sky.is-intro .at-edges,html[data-saq-motion="reduce"] #atlas .at-sky.is-intro .at-nodes{opacity:1}
+/* v29: seven tabs — the compact menu starts below 1200px instead of 761px */
+@media(min-width:761px) and (max-width:1199px){.menu{display:block}.saq-language-switch{margin-left:auto}.nav .saq-settings-wrap{margin-left:0}.navlinks{display:none;position:absolute;top:calc(100% - 1px);left:0;right:0;padding:12px 24px 18px;background:var(--theme-surface,#fffdfa);border-bottom:1px solid var(--theme-border,#efcfdd);box-shadow:0 18px 30px #49112e20}.navlinks.open{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.navlinks .navlink{min-height:46px;padding:13px;font-size:13px;text-align:left}}
 </style><script>if(/^https?:$/.test(location.protocol))document.documentElement.classList.add('saq-can-mask')</script><script>
 /* SAQ v25: accessibility settings (panel ⚙ → «Доступность»). Runs before the page is drawn, so nothing flashes. */
 (function(){
@@ -1235,14 +1875,14 @@ html[data-saq-theme="dark"]{--saq-h-strong:var(--theme-accent,#f16eac)}
  document.addEventListener('DOMContentLoaded',function(){if(userReduce())syncMotionCSS();if(state.text)buildLargeText()});
 })();
 </script></head><body>
-<header class="header"><div class="shell nav"><a href="#home" class="logo" data-route="home">SAQ<span>✦</span></a><nav id="navlinks" class="navlinks" aria-label="Основная навигация"><button class="navlink" data-route="home">Главная</button><button class="navlink" data-route="check">Экспресс-проверка</button><button class="navlink" data-route="scanner">Правовой сканер</button><button class="navlink" data-route="practice">Юрпрактика</button><button class="navlink" data-route="about">О проекте</button></nav><div class="saq-language-switch" role="group" aria-label="Язык интерфейса"><button type="button" data-saq-lang="ru" aria-pressed="true" lang="ru" title="Русский">RU</button><button type="button" data-saq-lang="kk" aria-pressed="false" lang="kk" title="Қазақша">ҚАЗ</button><button type="button" data-saq-lang="en" aria-pressed="false" lang="en" title="English">EN</button></div><div class="saq-settings-wrap" id="saq-settings-wrap"><button type="button" id="saq-settings-toggle" class="saq-settings-trigger" aria-label="Настройки оформления" title="Настройки оформления" aria-expanded="false" aria-controls="saq-settings-panel">⚙</button><aside class="saq-settings-panel" id="saq-settings-panel" aria-label="Настройки оформления" hidden><h2>Оформление ✦</h2><p class="saq-settings-hint">Выберите удобную тему и цветовую схему.</p><span class="saq-settings-label">Тема</span><div class="saq-settings-modes" role="group" aria-label="Тема оформления"><button type="button" class="saq-mode-choice" data-saq-mode="light" aria-pressed="true">☀ Светлая</button><button type="button" class="saq-mode-choice" data-saq-mode="dark" aria-pressed="false">☾ Тёмная</button></div><span class="saq-settings-label">Цветовая схема</span><div class="saq-settings-schemes" role="group" aria-label="Цветовая схема"><button type="button" class="saq-settings-choice" data-saq-scheme="barbie" aria-pressed="true"><span><span class="saq-settings-swatch" style="--swatch-a:#e91c79;--swatch-b:#fff5fa"></span>Barbie Pink</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="burgundy" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8f234e;--swatch-b:#fff7ed"></span>Burgundy</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="lavender" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8153bc;--swatch-b:#ffe9f3"></span>Lavender</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="rose-gold" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#a94770;--swatch-b:#e8bc89"></span>Rose Gold</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button></div><div class="saq-a11y" id="saq-a11y"><span class="saq-settings-label" id="saq-a11y-title">Доступность</span><div class="saq-a11y-list" role="group" aria-labelledby="saq-a11y-title"><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="text"><span>Крупный текст</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="contrast"><span>Высокий контраст</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="motion"><span>Отключить анимации</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="spacing"><span>Увеличенные интервалы</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="links"><span>Подчёркивать ссылки</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button></div><button type="button" class="saq-a11y-reset">Сбросить настройки доступности</button><p class="saq-a11y-status" role="status" aria-live="polite"></p></div><div class="saq-a11y saq-history-setting"><span class="saq-settings-label" id="saq-history-set-title">История</span><div class="saq-a11y-list" role="group" aria-labelledby="saq-history-set-title"><button type="button" class="saq-a11y-switch" role="switch" aria-checked="true" id="saq-history-toggle"><span>Сохранять историю проверок</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button></div></div><div class="saq-settings-footer">Выбор сохраняется на этом устройстве автоматически.</div></aside></div><button id="menu" class="menu" aria-expanded="false" aria-controls="navlinks" aria-label="Открыть меню">☰</button></div></header>
+<header class="header"><div class="shell nav"><a href="#home" class="logo" data-route="home">SAQ<span>✦</span></a><nav id="navlinks" class="navlinks" aria-label="Основная навигация"><button class="navlink" data-route="home">Главная</button><button class="navlink" data-route="check">Экспресс-проверка</button><button class="navlink" data-route="scanner">Правовой сканер</button><button class="navlink" data-route="practice">Юрпрактика</button><button class="navlink" data-route="lab">ИИ-лаборатория</button><button class="navlink" data-route="atlas">Атлас ГК</button><button class="navlink" data-route="about">О проекте</button></nav><div class="saq-language-switch" role="group" aria-label="Язык интерфейса"><button type="button" data-saq-lang="ru" aria-pressed="true" lang="ru" title="Русский">RU</button><button type="button" data-saq-lang="kk" aria-pressed="false" lang="kk" title="Қазақша">ҚАЗ</button><button type="button" data-saq-lang="en" aria-pressed="false" lang="en" title="English">EN</button></div><div class="saq-settings-wrap" id="saq-settings-wrap"><button type="button" id="saq-settings-toggle" class="saq-settings-trigger" aria-label="Настройки оформления" title="Настройки оформления" aria-expanded="false" aria-controls="saq-settings-panel">⚙</button><aside class="saq-settings-panel" id="saq-settings-panel" aria-label="Настройки оформления" hidden><h2>Оформление ✦</h2><p class="saq-settings-hint">Выберите удобную тему и цветовую схему.</p><span class="saq-settings-label">Тема</span><div class="saq-settings-modes" role="group" aria-label="Тема оформления"><button type="button" class="saq-mode-choice" data-saq-mode="light" aria-pressed="true">☀ Светлая</button><button type="button" class="saq-mode-choice" data-saq-mode="dark" aria-pressed="false">☾ Тёмная</button></div><span class="saq-settings-label">Цветовая схема</span><div class="saq-settings-schemes" role="group" aria-label="Цветовая схема"><button type="button" class="saq-settings-choice" data-saq-scheme="barbie" aria-pressed="true"><span><span class="saq-settings-swatch" style="--swatch-a:#e91c79;--swatch-b:#fff5fa"></span>Barbie Pink</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="burgundy" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8f234e;--swatch-b:#fff7ed"></span>Burgundy</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="lavender" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#8153bc;--swatch-b:#ffe9f3"></span>Lavender</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button><button type="button" class="saq-settings-choice" data-saq-scheme="rose-gold" aria-pressed="false"><span><span class="saq-settings-swatch" style="--swatch-a:#a94770;--swatch-b:#e8bc89"></span>Rose Gold</span><span class="saq-choice-tick" aria-hidden="true">✓</span></button></div><div class="saq-a11y" id="saq-a11y"><span class="saq-settings-label" id="saq-a11y-title">Доступность</span><div class="saq-a11y-list" role="group" aria-labelledby="saq-a11y-title"><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="text"><span>Крупный текст</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="contrast"><span>Высокий контраст</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="motion"><span>Отключить анимации</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="spacing"><span>Увеличенные интервалы</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button><button type="button" class="saq-a11y-switch" role="switch" aria-checked="false" data-saq-a11y="links"><span>Подчёркивать ссылки</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button></div><button type="button" class="saq-a11y-reset">Сбросить настройки доступности</button><p class="saq-a11y-status" role="status" aria-live="polite"></p></div><div class="saq-a11y saq-history-setting"><span class="saq-settings-label" id="saq-history-set-title">История</span><div class="saq-a11y-list" role="group" aria-labelledby="saq-history-set-title"><button type="button" class="saq-a11y-switch" role="switch" aria-checked="true" id="saq-history-toggle"><span>Сохранять историю проверок</span><span class="saq-a11y-track" aria-hidden="true"><span class="saq-a11y-thumb"></span></span></button></div></div><div class="saq-settings-footer">Выбор сохраняется на этом устройстве автоматически.</div></aside></div><button id="menu" class="menu" aria-expanded="false" aria-controls="navlinks" aria-label="Открыть меню">☰</button></div></header>
 <main>
 <section id="home" class="page active" style="padding-top:0"><div class="hero"><div class="shell"><div class="hero-copy"><div class="eyebrow">✦ LegalTech · Гражданское право РК</div><h1 aria-label="SAQ — проверь, прежде чем доверять ИИ."><span class="hero-word hero-word-brand" aria-hidden="true" style="--word-index:0">SAQ</span> <span class="hero-word" aria-hidden="true" style="--word-index:1">—</span> <span class="hero-word" aria-hidden="true" style="--word-index:2">проверь,</span> <span class="hero-word" aria-hidden="true" style="--word-index:3">прежде</span> <span class="hero-word" aria-hidden="true" style="--word-index:4">чем</span> <span class="hero-word hero-word-accent" aria-hidden="true" style="--word-index:5">доверять</span> <span class="hero-word hero-word-accent" aria-hidden="true" style="--word-index:6">ИИ.</span></h1><p>Образовательная платформа для проверки юридической информации, анализа ответов искусственного интеллекта и развития правового мышления.</p><div class="actions"><button class="btn primary" data-route="check">Начать проверку ↗</button><button class="btn secondary" data-route="about">Узнать о проекте</button></div></div><div class="hero-visual"><div class="heroimage saq-hero-built saq-hero-stage" role="img" aria-label="Декоративная иллюстрация: Фемида на фоне здания суда"><div class="saq-stage-bg" aria-hidden="true"><div class="saq-stage-bg-parallax"><img loading="lazy" decoding="async" src="hero_scene_bg.jpg" alt="" draggable="false" decoding="async"/></div><span class="saq-stage-rays"></span><span class="saq-stage-sweep"></span></div><svg class="saq-stage-arcs" viewBox="0 0 852 704" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="saqArcGold" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#e9c089" stop-opacity="0"/><stop offset=".25" stop-color="#d9a866"/><stop offset=".7" stop-color="#f3d7a6"/><stop offset="1" stop-color="#e9c089" stop-opacity="0"/></linearGradient></defs><path class="saq-arc" d="M-260 244C-120 170 200 92 470 120" pathLength="1"/><path class="saq-arc saq-arc-2" d="M714 312C716 246 768 186 852 168" pathLength="1"/><path class="saq-arc-glint" d="M-260 244C-120 170 200 92 470 120" pathLength="1"/><path class="saq-arc-glint saq-arc-2" d="M714 312C716 246 768 186 852 168" pathLength="1"/></svg><div class="saq-stage-motes" aria-hidden="true"><i style="--x:22%;--y:78%;--d:0s;--t:9s"></i><i style="--x:31%;--y:66%;--d:2.1s;--t:11s"></i><i style="--x:45%;--y:84%;--d:4.3s;--t:10s"></i><i style="--x:56%;--y:72%;--d:1.2s;--t:12s"></i><i style="--x:28%;--y:90%;--d:5.5s;--t:9.5s"></i><i style="--x:64%;--y:62%;--d:3.4s;--t:11.5s"></i><i style="--x:18%;--y:60%;--d:6.6s;--t:10.5s"></i><i style="--x:50%;--y:52%;--d:7.7s;--t:12.5s"></i></div><div class="saq-themis-rig saq-themis-hd" aria-hidden="true"><div class="saq-themis-inner"><span class="saq-themis-backlight"></span><span class="saq-themis-beam"></span><div class="saq-themis-layer saq-tr-body"><img loading="lazy" decoding="async" src="themis_hd_body.webp" alt="" draggable="false" decoding="async" fetchpriority="high"/><i class="saq-themis-sheen"></i></div><div class="saq-themis-layer saq-tr-pan saq-tr-pan-l"><img loading="lazy" decoding="async" src="themis_hd_pan_left.webp" alt="" draggable="false" decoding="async"/><i class="saq-themis-sheen"></i><b class="saq-themis-glint saq-glint-pan"></b></div><div class="saq-themis-layer saq-tr-pan saq-tr-pan-r"><img loading="lazy" decoding="async" src="themis_hd_pan_right.webp" alt="" draggable="false" decoding="async"/><i class="saq-themis-sheen"></i></div><b class="saq-themis-glint saq-glint-top"></b><b class="saq-themis-glint saq-glint-sword"></b></div></div><div class="saq-stage-sparks" aria-hidden="true"><span class="saq-stage-spark is-pink" style="--x:14%;--y:34%;--s:30px;--d:0s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-pink" style="--x:4%;--y:82%;--s:22px;--d:1.6s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-gold" style="--x:40%;--y:12%;--s:16px;--d:0.8s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-gold" style="--x:71%;--y:7%;--s:14px;--d:2.4s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span><span class="saq-stage-spark is-gold" style="--x:36%;--y:64%;--s:12px;--d:3.2s"><svg viewBox="-1 -1 2 2" aria-hidden="true"><path d="M0-1C.1-.14.14-.1 1 0 .14.1.1.14 0 1-.1.14-.14.1-1 0-.14-.1-.1-.14 0-1Z"/></svg></span></div></div></div></div></div></div><div class="shell"><section class="section"><div class="sectionhead"><div class="eyebrow">01 / Возможности</div><h2>Три инструмента для правового мышления</h2><p>От самостоятельной проверки ответа ИИ — к поиску норм и разбору учебных ситуаций.</p></div><div class="grid3"><article class="card feature"><div class="iconbox">ϟ</div><h3>Экспресс-проверка</h3><p>Семь критериев для самостоятельной проверки достоверности ответа ИИ.</p><button class="btn primary small" data-route="check">Перейти ↗</button></article><article class="card feature"><div class="iconbox">⌕</div><h3>Правовой сканер</h3><p>Поиск по внутренней базе ГК РК; анализ через ИИ включается после настройки API.</p><button class="btn primary small" data-route="scanner">Перейти ↗</button></article><article class="card feature"><div class="iconbox">⚖</div><h3>Юрпрактика</h3><p>Учебные упражнения на поиск неподтверждённых утверждений и письменное обоснование своей позиции.</p><button class="btn primary small" data-route="practice">Перейти ↗</button></article></div></section><section class="section"><div class="aboutquote">«Искусственный интеллект может помогать юристу, но ответственность за юридический анализ требует проверки информации».</div></section></div></section>
-<section id="check" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 01 / Самостоятельная оценка</div><h2>ϟ Экспресс-проверка</h2><p>Оцените ответ ИИ по семи критериям. Здесь вы отмечаете результаты <b>собственной</b> проверки, а не получаете автоматическое экспертное заключение.</p></div><div class="pagebadge">☑</div></div><div class="card criteria" id="criteria"></div><div class="actions"><button class="btn secondary" id="check-reset">↻ Пройти проверку заново</button></div><div id="check-output" class="result show" role="status" aria-live="polite" aria-atomic="true"></div></section>
-<section id="scanner" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 02 / Проверка по загруженному ГК РК</div><h2>⌕ Правовой сканер</h2><p>Введите учебный гражданско-правовой кейс и ответ искусственного интеллекта. Сопоставление выполняется только с загруженным ГК РК (Особенная часть).</p></div><div class="pagebadge">⌕</div></div><div id="scan-source-panel" class="saq-src" aria-live="polite"><div class="saq-src-icon" aria-hidden="true">§</div><div class="saq-src-body"><p class="saq-src-text" data-saq-no-translate>Нормативная база: ГК РК (Особенная часть) — загрузка сведений…</p><p class="saq-src-mode" data-saq-no-translate hidden></p></div></div><div class="grid2"><div class="field"><label for="case">01 — Описание гражданско-правового кейса</label><textarea id="case" maxlength="5000" placeholder="Опишите обстоятельства дела: стороны, договор, спорный вопрос…"></textarea><small id="case-count">0 / 5000 символов</small></div><div class="field"><label for="ai">02 — Ответ, полученный от ИИ</label><textarea id="ai" maxlength="10000" placeholder="Вставьте текст ответа ИИ, который необходимо проверить…"></textarea><small id="ai-count">0 / 10000 символов</small></div></div><div class="actions"><button id="scan-btn" class="btn primary">Проверить ↗</button><button id="scan-clear" class="btn secondary">Очистить</button></div><div class="saq-examples"><span class="saq-examples-label">Проверить на готовом примере:</span><button type="button" class="saq-example-btn" data-saq-example="errors">Ответ с ошибками</button><button type="button" class="saq-example-btn" data-saq-example="missing">Несуществующие статьи</button><button type="button" class="saq-example-btn" data-saq-example="good">Верный ответ</button></div><div id="scan-info" class="status" role="status" data-saq-no-translate></div><div id="scan-report" class="resultbox" aria-live="polite" data-saq-no-translate></div><section id="scan-history" class="saq-history" data-saq-no-translate></section><section class="section"><div class="card scanner-runner-card" style="background:#fff1f7"><h3>Как работает проверка</h3><div class="scanner-runner" aria-label="Этапы проверки"><div class="scanner-runner-track"><div class="saq-runner-group"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div><div class="saq-runner-group" aria-hidden="true"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div></div></div><div class="tags" style="margin-top:24px"><span class="tag">Подтверждено</span><span class="tag">Частично подтверждено</span><span class="tag">Не соответствует норме</span><span class="tag">Не удалось подтвердить</span></div></div></section></section>
+<section id="check" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 01 / Самостоятельная оценка</div><h2>ϟ Экспресс-проверка</h2><p>Оцените ответ ИИ по семи критериям. Здесь вы отмечаете результаты <b>собственной</b> проверки, а не получаете автоматическое экспертное заключение.</p></div><div class="pagebadge">☑</div></div><div class="check-meter" id="check-meter"><div class="cm-ring" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><circle class="cm-track" cx="32" cy="32" r="27"></circle><circle class="cm-arc" cx="32" cy="32" r="27"></circle></svg><b class="cm-num"><span class="cm-k">0</span><small>/7</small></b></div><div class="cm-main"><b class="cm-title">Отмечено</b><div class="cm-dots" role="group" aria-labelledby="cm-dots-l"><span id="cm-dots-l" class="cm-sr">Перейти к критерию</span></div></div><div class="cm-tally" aria-hidden="true"><span class="cm-t cm-yes"><i>✓</i><span>Да</span><b>0</b></span><span class="cm-t cm-part"><i>½</i><span>Частично</span><b>0</b></span><span class="cm-t cm-no"><i>✗</i><span>Нет</span><b>0</b></span></div><button type="button" class="cm-go" hidden><span>Смотреть итог</span> <i aria-hidden="true">↓</i></button></div><div class="card criteria" id="criteria"></div><div class="actions"><button class="btn secondary" id="check-reset">↻ Пройти проверку заново</button></div><div id="check-output" class="result show" role="status" aria-live="polite" aria-atomic="true"></div></section>
+<section id="scanner" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 02 / Проверка по загруженному ГК РК</div><h2>⌕ Правовой сканер</h2><p>Введите учебный гражданско-правовой кейс и ответ искусственного интеллекта. Сопоставление выполняется только с загруженным ГК РК (Особенная часть).</p></div><div class="pagebadge">⌕</div></div><div id="scan-source-panel" class="saq-src" aria-live="polite"><div class="saq-src-icon" aria-hidden="true">§</div><div class="saq-src-body"><p class="saq-src-text" data-saq-no-translate>Нормативная база: ГК РК (Особенная часть) — загрузка сведений…</p><p class="saq-src-mode" data-saq-no-translate hidden></p></div></div><div class="grid2"><div class="field"><label for="case">01 — Описание гражданско-правового кейса</label><textarea id="case" maxlength="5000" placeholder="Опишите обстоятельства дела: стороны, договор, спорный вопрос…"></textarea><small id="case-count">0 / 5000 символов</small></div><div class="field"><label for="ai">02 — Ответ, полученный от ИИ</label><textarea id="ai" maxlength="10000" placeholder="Вставьте текст ответа ИИ, который необходимо проверить…"></textarea><small id="ai-count">0 / 10000 символов</small></div></div><div class="actions"><button id="scan-btn" class="btn primary">Проверить ↗</button><button id="scan-clear" class="btn secondary">Очистить</button></div><div class="saq-examples"><span class="saq-examples-label">Проверить на готовом примере:</span><button type="button" class="saq-example-btn" data-saq-example="errors">Ответ с ошибками</button><button type="button" class="saq-example-btn" data-saq-example="missing">Несуществующие статьи</button><button type="button" class="saq-example-btn" data-saq-example="good">Верный ответ</button></div><div id="scan-info" class="status" role="status" data-saq-no-translate></div><div id="scan-report" class="resultbox" aria-live="polite" data-saq-no-translate></div><section id="scan-history" class="saq-history" data-saq-no-translate></section><section id="saq-gkmap" class="saq-gkmap" aria-labelledby="saq-gk-title" data-saq-no-translate></section><section class="section"><div class="card scanner-runner-card" style="background:#fff1f7"><h3>Как работает проверка</h3><div class="scanner-runner" aria-label="Этапы проверки"><div class="scanner-runner-track"><div class="saq-runner-group"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div><div class="saq-runner-group" aria-hidden="true"><span class="scanner-runner-step">Получение кейса и ответа</span><span class="scanner-runner-step">Выделение юридических утверждений</span><span class="scanner-runner-step">Поиск норм в базе</span><span class="scanner-runner-step">Дословное сопоставление</span><span class="scanner-runner-step">Определение расхождений</span><span class="scanner-runner-step">Отчёт с источниками</span></div></div></div><div class="tags" style="margin-top:24px"><span class="tag">Подтверждено</span><span class="tag">Частично подтверждено</span><span class="tag">Не соответствует норме</span><span class="tag">Не удалось подтвердить</span></div></div></section></section>
 <section id="practice" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 03 / Обучение</div><h2>⚖ Юрпрактика</h2><p>Разбирайте конкретные учебные ситуации, сравнивайте ошибочные ответы ИИ с дословными выдержками из загруженного ГК РК и аргументируйте выводы.</p></div><div class="pagebadge">⚖</div></div><div id="practice-list"><div class="sectionhead"><h3>Выберите учебную ситуацию</h3><p>После выбора прочитайте обстоятельства, найдите проблему в ответе ИИ, предложите план проверки и изучите методический разбор.</p></div><div class="exercise-list" id="exercises"></div></div><div id="practice-work" class="hide"><div class="steps"><span class="current">1 · Ситуация</span><span>2 · Анализ ответа</span><span>3 · Ваше обоснование</span><span>4 · Разбор</span></div><div class="card"><div class="eyebrow" id="ex-tag">Практический кейс</div><h3 id="ex-title"></h3><p id="ex-case"></p><div style="margin-top:24px"><h3>Ответ ИИ для анализа</h3><div class="quote" id="ex-ai"></div><p class="saq-ex-links" id="ex-ai-links" data-saq-no-translate hidden></p></div><div class="field" style="margin-top:23px"><label for="ex-error">Какую ошибку или проблему вы видите?</label><select id="ex-error"><option value="">Выберите категорию</option><option>Несуществующая статья</option><option>Неправильный номер статьи</option><option>Искажённое содержание нормы</option><option>Неправильное толкование</option><option>Неправильное применение нормы к обстоятельствам дела</option><option>Неподтверждённое юридическое утверждение</option></select></div><div class="saq-case-reference"><label for="ex-article">Какая статья из загруженного ГК РК помогает проверить утверждение?</label><select id="ex-article"><option value="">Выберите статью</option><option value="407">Статья 407 · Условие договора о товаре</option><option value="408">Статья 408 · Передача товара</option><option value="428">Статья 428 · Ненадлежащее качество</option><option value="440">Статья 440 · Предварительная оплата</option></select><small>Статьи взяты из внутренней нормативной базы. Сравнение выполняется после отправки.</small></div><div class="saq-case-tip" id="ex-tip"></div><div class="field"><label for="ex-reason">Что именно нужно проверить и почему?</label><textarea id="ex-reason" style="min-height:115px" placeholder="Объясните, какая информация отсутствует и как проверить вывод…"></textarea></div><div class="field"><label for="ex-solution">Предложите норму или план решения</label><textarea id="ex-solution" style="min-height:115px" placeholder="Укажите проверенный источник или объясните, какие нормы и факты нужно сначала установить. Не придумывайте статьи."></textarea></div><div class="actions"><button id="ex-submit" class="btn primary">Отправить и открыть разбор</button><button id="ex-back" class="btn secondary">← К списку</button></div><div id="ex-message" class="status" aria-live="polite"></div></div><div id="ex-feedback" class="result"></div></div></section>
 
-<section id="about" class="page shell"><div class="pagehead"><div><div class="eyebrow">О проекте / Наша миссия</div><h2>О проекте SAQ<span style="color:var(--pink)">✦</span></h2><p>Образовательная LegalTech-платформа для ответственного использования искусственного интеллекта при изучении гражданского права Казахстана.</p></div><div class="pagebadge">✦</div></div><div class="aboutquote">«Искусственный интеллект может помогать юристу, но ответственность за юридический анализ требует проверки информации».</div><div class="saq-about-horizontal-stage" id="saq-about-horizontal-stage" aria-label="Четыре темы о проекте"><div class="saq-about-scroll-head"><span class="saq-about-scroll-hint">↔ Листайте горизонтально · Shift + скролл</span><div class="saq-about-scroll-actions" aria-label="Листать карточки"><button type="button" class="saq-about-arrow" id="saq-about-prev" aria-label="Предыдущая карточка">←</button><span id="saq-about-position" class="saq-about-position" aria-live="polite">1 / 4</span><button type="button" class="saq-about-arrow" id="saq-about-next" aria-label="Следующая карточка">→</button></div></div><div class="saq-about-horizontal-pin" tabindex="0" role="region" aria-label="Горизонтальная лента о проекте. Используйте Shift и колёсико, стрелки либо жест вправо или влево."><div class="grid2 saq-about-horizontal-track"><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">01</span><span class="saq-about-kicker">Основа платформы</span></div><div class="saq-about-panel-head"><div class="iconbox">◎</div><div class="saq-about-mini-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Что такое SAQ?</h3><p>Учебная среда, в которой студенты учатся различать убедительно звучащие, но неподтверждённые утверждения и правовые выводы, подкреплённые первоисточниками.</p><div class="saq-about-chipline"><span>Critical reading</span><span>LegalTech</span><span>Self-check</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">02</span><span class="saq-about-kicker">Проблема проекта</span></div><div class="saq-about-panel-head"><div class="iconbox">!</div><div class="saq-about-mini-bars" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Какую проблему решаем?</h3><p>ИИ может ошибаться в ссылках на статьи, содержании норм и их применении. SAQ помогает замечать такие риски и выстраивать проверяемую аргументацию.</p><div class="saq-about-chipline"><span>Ошибки ссылок</span><span>Толкование</span><span>Проверяемость</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">03</span><span class="saq-about-kicker">Кому полезно</span></div><div class="saq-about-panel-head"><div class="iconbox">♙</div><div class="saq-about-mini-users" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Для кого платформа?</h3><p>Для студентов юридических специальностей, изучающих гражданское право, начинающих исследователей и преподавателей.</p><div class="saq-about-chipline"><span>Студенты</span><span>Исследователи</span><span>Преподаватели</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">04</span><span class="saq-about-kicker">Нормативная опора</span></div><div class="saq-about-panel-head"><div class="iconbox">▤</div><div class="saq-about-mini-source" aria-hidden="true"><span></span><span></span></div></div><h3>Нормативный источник</h3><p>Гражданский кодекс Республики Казахстан (Особенная часть) от 1 июля 1999 года № 409-I. <a href="https://adilet.zan.kz/rus/docs/K990000409_" target="_blank" rel="noopener noreferrer">ИПС «Әділет» — официальный текст ↗</a>. Внутренняя база SAQ составлена из предоставленного DOCX системы «ПАРАГРАФ» с редакцией по состоянию на 21.10.2026.</p><div class="saq-about-chipline"><span>Первоисточник</span><span>Статьи и пункты</span><span>Редакция</span></div></div></div><div class="saq-about-horizontal-progress" aria-hidden="true"><span></span></div></div></div><section class="section saq-about-problem"><div class="strip"><div class="card"><div class="icon">⚠</div><div><strong>В чём проблема?</strong><p>ИИ может уверенно ссылаться на несуществующие статьи, путать нормы и неправильно применять право к учебному кейсу.</p></div></div><div class="card"><div class="icon">◎</div><div><strong>Что делает SAQ?</strong><p>Помогает отделять подтверждённые правовые сведения от неподтверждённых утверждений и формировать привычку проверять источник.</p></div></div></div></section><section class="section saq-about-modules"><div class="sectionhead"><h2>Как работают инструменты</h2></div><div class="saq-about-scroll-stage" id="saq-about-scroll-stage"><div class="saq-about-orb-panel" aria-hidden="true"><div class="saq-about-orb"><span class="saq-orb-core">✦</span></div><div class="saq-orb-caption">От вопроса — к проверенному выводу</div></div><div class="grid3 saq-about-scroll-deck"><div class="card"><h3>01 · Экспресс-проверка</h3><p>Вы самостоятельно оцениваете семь признаков надёжного ответа, после чего видите сводку своих отметок.</p></div><div class="card"><h3>02 · Правовой сканер</h3><p>Делит ответ ИИ на утверждения, находит статьи ГК РК, показывает дословные цитаты и сравнение «ответ ↔ закон» со ссылками на «Әділет».</p></div><div class="card"><h3>03 · Юрпрактика</h3><p>Учебные задания помогают распознавать бездоказательные выводы и составлять собственный план правовой проверки.</p></div></div></div></section><section class="section"><div class="card saq-learning-outcomes"><h3>Ожидаемые образовательные результаты</h3><p>Критическая оценка текста ИИ; умение запрашивать проверяемые ссылки; поиск и сверка статей и пунктов; внимательное чтение нормы; самостоятельный анализ кейса; ответственное обращение с юридической информацией.</p><button class="btn primary small" data-route="check">Попробовать экспресс-проверку ↗</button></div></section></section>
+<section id="lab" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 04 / Работа с ИИ</div><h2>✧ ИИ-лаборатория</h2><p>Научитесь спрашивать ИИ так, чтобы его ответ можно было проверить, и сравните ответы разных ИИ по загруженному ГК РК (Особенная часть).</p></div><div class="pagebadge">✧</div></div><div id="saq-lab" data-saq-no-translate></div></section><section id="atlas" class="page shell"><div class="pagehead"><div><div class="eyebrow">Инструмент 05 / Исследование кодекса</div><h2>✶ Атлас ГК РК</h2><p>Сроки и связи Особенной части ГК РК, найденные по тексту кодекса: шкала сроков, игра «Угадай срок» и созвездие ссылок между статьями.</p></div><div class="pagebadge">✶</div></div><div id="saq-atlas" data-saq-no-translate></div></section><section id="about" class="page shell"><div class="pagehead"><div><div class="eyebrow">О проекте / Наша миссия</div><h2>О проекте SAQ<span style="color:var(--pink)">✦</span></h2><p>Образовательная LegalTech-платформа для ответственного использования искусственного интеллекта при изучении гражданского права Казахстана.</p></div><div class="pagebadge">✦</div></div><div class="aboutquote">«Искусственный интеллект может помогать юристу, но ответственность за юридический анализ требует проверки информации».</div><div class="saq-about-horizontal-stage" id="saq-about-horizontal-stage" aria-label="Четыре темы о проекте"><div class="saq-about-scroll-head"><span class="saq-about-scroll-hint">↔ Листайте горизонтально · Shift + скролл</span><div class="saq-about-scroll-actions" aria-label="Листать карточки"><button type="button" class="saq-about-arrow" id="saq-about-prev" aria-label="Предыдущая карточка">←</button><span id="saq-about-position" class="saq-about-position" aria-live="polite">1 / 4</span><button type="button" class="saq-about-arrow" id="saq-about-next" aria-label="Следующая карточка">→</button></div></div><div class="saq-about-horizontal-pin" tabindex="0" role="region" aria-label="Горизонтальная лента о проекте. Используйте Shift и колёсико, стрелки либо жест вправо или влево."><div class="grid2 saq-about-horizontal-track"><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">01</span><span class="saq-about-kicker">Основа платформы</span></div><div class="saq-about-panel-head"><div class="iconbox">◎</div><div class="saq-about-mini-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Что такое SAQ?</h3><p>Учебная среда, в которой студенты учатся различать убедительно звучащие, но неподтверждённые утверждения и правовые выводы, подкреплённые первоисточниками.</p><div class="saq-about-chipline"><span>Critical reading</span><span>LegalTech</span><span>Self-check</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">02</span><span class="saq-about-kicker">Проблема проекта</span></div><div class="saq-about-panel-head"><div class="iconbox">!</div><div class="saq-about-mini-bars" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Какую проблему решаем?</h3><p>ИИ может ошибаться в ссылках на статьи, содержании норм и их применении. SAQ помогает замечать такие риски и выстраивать проверяемую аргументацию.</p><div class="saq-about-chipline"><span>Ошибки ссылок</span><span>Толкование</span><span>Проверяемость</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">03</span><span class="saq-about-kicker">Кому полезно</span></div><div class="saq-about-panel-head"><div class="iconbox">♙</div><div class="saq-about-mini-users" aria-hidden="true"><span></span><span></span><span></span></div></div><h3>Для кого платформа?</h3><p>Для студентов юридических специальностей, изучающих гражданское право, начинающих исследователей и преподавателей.</p><div class="saq-about-chipline"><span>Студенты</span><span>Исследователи</span><span>Преподаватели</span></div></div><div class="card saq-about-panel"><div class="saq-about-topline"><span class="saq-about-step">04</span><span class="saq-about-kicker">Нормативная опора</span></div><div class="saq-about-panel-head"><div class="iconbox">▤</div><div class="saq-about-mini-source" aria-hidden="true"><span></span><span></span></div></div><h3>Нормативный источник</h3><p>Гражданский кодекс Республики Казахстан (Особенная часть) от 1 июля 1999 года № 409-I. <a href="https://adilet.zan.kz/rus/docs/K990000409_" target="_blank" rel="noopener noreferrer">ИПС «Әділет» — официальный текст ↗</a>. Внутренняя база SAQ составлена из предоставленного DOCX системы «ПАРАГРАФ» с редакцией по состоянию на 21.10.2026.</p><div class="saq-about-chipline"><span>Первоисточник</span><span>Статьи и пункты</span><span>Редакция</span></div></div></div><div class="saq-about-horizontal-progress" aria-hidden="true"><span></span></div></div></div><section class="section saq-about-problem"><div class="strip"><div class="card"><div class="icon">⚠</div><div><strong>В чём проблема?</strong><p>ИИ может уверенно ссылаться на несуществующие статьи, путать нормы и неправильно применять право к учебному кейсу.</p></div></div><div class="card"><div class="icon">◎</div><div><strong>Что делает SAQ?</strong><p>Помогает отделять подтверждённые правовые сведения от неподтверждённых утверждений и формировать привычку проверять источник.</p></div></div></div></section><section class="section saq-about-modules"><div class="sectionhead"><h2>Как работают инструменты</h2></div><div class="saq-about-scroll-stage" id="saq-about-scroll-stage"><div class="saq-about-orb-panel" aria-hidden="true"><div class="saq-about-orb"><span class="saq-orb-core">✦</span></div><div class="saq-orb-caption">От вопроса — к проверенному выводу</div></div><div class="grid3 saq-about-scroll-deck"><div class="card"><h3>01 · Экспресс-проверка</h3><p>Вы самостоятельно оцениваете семь признаков надёжного ответа, после чего видите сводку своих отметок.</p></div><div class="card"><h3>02 · Правовой сканер</h3><p>Делит ответ ИИ на утверждения, находит статьи ГК РК, показывает дословные цитаты и сравнение «ответ ↔ закон» со ссылками на «Әділет».</p></div><div class="card"><h3>03 · Юрпрактика</h3><p>Учебные задания помогают распознавать бездоказательные выводы и составлять собственный план правовой проверки.</p></div></div></div></section><section class="section"><div class="card saq-learning-outcomes"><h3>Ожидаемые образовательные результаты</h3><p>Критическая оценка текста ИИ; умение запрашивать проверяемые ссылки; поиск и сверка статей и пунктов; внимательное чтение нормы; самостоятельный анализ кейса; ответственное обращение с юридической информацией.</p><button class="btn primary small" data-route="check">Попробовать экспресс-проверку ↗</button></div></section></section>
 </main><footer class="footer"><div class="shell"><span class="logo" style="font-size:23px">SAQ<span>✦</span></span><span>Образовательный проект · Гражданское право Республики Казахстан</span><span class="saq-footer-src"><span>Источник для сверки: <a href="https://adilet.zan.kz/rus/docs/K990000409_" target="_blank" rel="noopener noreferrer">Гражданский кодекс Республики Казахстан (Особенная часть) от 1 июля 1999 года № 409-I — ИПС «Әділет» ↗</a></span><span class="saq-footer-note">Информация носит справочный характер и не заменяет консультацию юриста.</span><span class="saq-footer-note saq-footer-date">Содержание проверено по ИПС «Әділет» на 15.11.2026.</span></span></div></footer>
 <script>
 'use strict';
@@ -1252,7 +1892,6 @@ let checkAnswers=Array(7).fill(null), imported=[];
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function route(id){if(!document.getElementById(id))id='home';$$('.page').forEach(p=>p.classList.toggle('active',p.id===id));$$('.navlink').forEach(b=>b.classList.toggle('active',b.dataset.route===id));$('#navlinks').classList.remove('open');$('#menu').setAttribute('aria-expanded','false');if(location.hash!=='#'+id){try{history.replaceState(null,'','#'+id)}catch(_){}}try{scrollTo({top:0,behavior:'instant'})}catch(_){scrollTo(0,0)}}
 $$('[data-route]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();route(n.dataset.route)}));$('#menu').addEventListener('click',()=>{let open=$('#navlinks').classList.toggle('open');$('#menu').setAttribute('aria-expanded',String(open))});addEventListener('hashchange',()=>route(location.hash.slice(1)));route(location.hash.slice(1)||'home');
-$('#criteria').innerHTML=criteria.map((q,i)=>`<div class="criterion"><div class="question"><span class="num">${i+1}</span>${escapeHtml(q)}</div><div class="choices" role="group" aria-label="Критерий ${i+1}">${[['yes','Да'],['part','Частично'],['no','Нет']].map(([v,t])=>`<label><input type="radio" name="c${i}" value="${v}">${t}</label>`).join('')}</div></div>`).join('');
 const checkAdvice=[
  'Уточните, какой нормативный акт использован в ответе ИИ.',
  'Проверьте существование и наименование названного источника.',
@@ -1262,6 +1901,29 @@ const checkAdvice=[
  'Перепроверьте смысл нормы с учётом всех условий и исключений.',
  'Соотнесите каждое условие нормы с установленными фактами учебного кейса.'
 ];
+$('#criteria').innerHTML=criteria.map((q,i)=>`<div class="criterion" data-state=""><div class="question"><span class="num" aria-hidden="true"><b>${i+1}</b><i class="crit-ico"></i></span><div class="qtext"><span class="qmain" id="cq${i}">${escapeHtml(q)}</span><small class="crit-hint">${escapeHtml(checkAdvice[i])}</small></div></div><div class="choices" role="radiogroup" aria-labelledby="cq${i}">${[['yes','Да','✓'],['part','Частично','½'],['no','Нет','✗']].map(([v,t,ic])=>`<label class="ch ch-${v}"><input type="radio" name="c${i}" value="${v}"><span class="ch-ico" aria-hidden="true">${ic}</span><span class="ch-t">${t}</span></label>`).join('')}</div></div>`).join('');
+$('#check-meter .cm-dots').insertAdjacentHTML('beforeend',criteria.map((q,i)=>`<button type="button" class="cm-dot" data-go="${i}" aria-labelledby="cq${i}" data-state="">${i+1}</button>`).join(''));
+let cmWasDone=false;
+function renderCheckMeter(){
+ const m=$('#check-meter'); if(!m)return;
+ const tot=criteria.length, k=checkAnswers.filter(Boolean).length, yes=checkAnswers.filter(x=>x==='yes').length;
+ m.querySelector('.cm-k').textContent=k;
+ const arc=m.querySelector('.cm-arc'), C=2*Math.PI*27; arc.style.strokeDasharray=C.toFixed(2); arc.style.strokeDashoffset=(C*(1-k/tot)).toFixed(2);
+ ['yes','part','no'].forEach(v=>{m.querySelector('.cm-'+v+' b').textContent=checkAnswers.filter(x=>x===v).length});
+ m.querySelectorAll('.cm-dot').forEach((d,i)=>{d.dataset.state=checkAnswers[i]||''});
+ $$('#criteria .criterion').forEach((row,i)=>{row.dataset.state=checkAnswers[i]||''});
+ const done=k===tot; m.classList.toggle('is-done',done); m.dataset.grade=done?(yes>=6?'high':yes>=3?'mid':'low'):'';
+ m.querySelector('.cm-go').hidden=!done;
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(done&&!cmWasDone&&!reduced){m.classList.remove('is-burst');void m.offsetWidth;m.classList.add('is-burst');setTimeout(()=>m.classList.remove('is-burst'),1400)}
+ cmWasDone=done;
+}
+$('#check-meter').addEventListener('click',e=>{
+ const d=e.target.closest('.cm-dot');
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(d){const row=$$('#criteria .criterion')[Number(d.dataset.go)];if(!row)return;try{row.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'})}catch(_){row.scrollIntoView()}const r=row.querySelector('input:checked')||row.querySelector('input');if(r)r.focus({preventScroll:true});row.classList.remove('is-flash');void row.offsetWidth;row.classList.add('is-flash');return}
+ if(e.target.closest('.cm-go')){const out=$('#check-output');out.setAttribute('tabindex','-1');try{out.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'})}catch(_){out.scrollIntoView()}out.focus({preventScroll:true})}
+});
 const saqPreviousCounts=new Map();
 function animateCountUps(root){
  const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1307,8 +1969,9 @@ function renderCheckResult(){
  $('#check-output').innerHTML=`<div class="check-outcome"><div><h3 style="margin:0">РЕЗУЛЬТАТ ЭКСПРЕСС-ПРОВЕРКИ</h3><p class="check-subtitle">Итог исключительно по вашим отметкам</p></div><span class="pill ${grade}">${outcome}</span></div><div class="resultstats"><div class="stat"><strong><span data-countup="${yes}">0</span> / ${total}</strong><small>Выполнено из общего числа</small></div><div class="stat"><strong><span data-countup="${no}">0</span></strong><small>Не выполнено</small></div><div class="stat"><strong><span data-countup="${part}">0</span></strong><small>Частично выполнено</small></div><div class="stat"><strong><span data-countup="${unanswered}">0</span></strong><small>Без ответа</small></div></div><div class="check-barlabel"><span>${complete?'Выполнение критериев':'Заполнение чек-листа'}</span><span><span data-countup="${complete?percent:filledPercent}" data-suffix="%">0%</span></span></div><div class="progressline" role="progressbar" aria-label="${complete?'Выполнение критериев':'Заполнение чек-листа'}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${complete?percent:filledPercent}"><span style="width:${complete?percent:filledPercent}%"></span></div>${complete?`<p><span class="check-percentage"><span data-countup="${percent}" data-suffix="%">0%</span></span> <span class="check-subtitle">критериев отмечены как полностью выполненные</span></p>`:`<p><b>До итоговой оценки осталось ответить на <span data-countup="${unanswered}">0</span> из ${total} пунктов.</b> После заполнения всех обязательных пунктов появятся статус соответствия и процент выполнения критериев.</p>`}<div class="check-problems"><h4>Обнаруженные проблемы</h4>${issues.length?`<ul class="check-issues">${issues.join('')}</ul>`:'<p>По выбранным ответам «Нет» и «Частично» проблем пока нет.</p>'}${outstanding.length?`<h4>Ещё не проверено</h4><ul class="check-issues">${outstanding.join('')}</ul>`:''}</div><div class="check-note"><b>Рекомендация:</b> ${issues.length?'Перепроверьте перечисленные вопросы по тексту нормативного источника.':'Сверьте указанные в ответе статьи, пункты и правовые выводы с нормативным первоисточником.'}</div>`;
  $('#check-output').classList.add('show');
  animateCountUps($('#check-output'));
+ renderCheckMeter();
 }
-$$('#criteria input').forEach(input=>input.addEventListener('change',()=>{const i=Number(input.name.slice(1));checkAnswers[i]=input.value;renderCheckResult()}));
+$$('#criteria input').forEach(input=>input.addEventListener('change',()=>{const i=Number(input.name.slice(1));checkAnswers[i]=input.value;renderCheckResult();const row=input.closest('.criterion');if(row){row.classList.remove('is-pop');void row.offsetWidth;row.classList.add('is-pop')}}));
 $('#check-reset').onclick=()=>{checkAnswers.fill(null);$$('#criteria input').forEach(input=>input.checked=false);renderCheckResult()};
 renderCheckResult();
 [['case','case-count',5000],['ai','ai-count',10000]].forEach(([id,out,max])=>$('#'+id).addEventListener('input',()=>$('#'+out).textContent=$('#'+id).value.length+' / '+max+' символов'));
@@ -1585,4 +2248,7 @@ $('#ex-feedback').classList.add('show');$('#next-ex').onclick=()=>currentEx<exer
 <script src="saq_scanner_ui.js" defer></script>
 <script src="saq_i18n.js" defer></script>
 <script src="saq_helper.js" defer></script>
+<script src="saq_wow.js" defer></script>
+<script src="saq_lab.js" defer></script>
+<script src="saq_atlas.js" defer></script>
 </body></html>

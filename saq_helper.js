@@ -10,26 +10,26 @@
 
   /* ------------------------------------------------------------ interface */
   const UI = {
-    ru: { launch: 'Помощник SAQ', title: 'Помощник SAQ', close: 'Закрыть помощника', input: 'Ваш вопрос о сайте', placeholder: 'Спросите о сайте SAQ…', send: 'Отправить',
+    ru: { launch: 'Помощник SAQ', sub: 'Отвечаю по базе вопросов о сайте · не ИИ', typing: 'Помощник печатает…', title: 'Помощник SAQ', close: 'Закрыть помощника', input: 'Ваш вопрос о сайте', placeholder: 'Спросите о сайте SAQ…', send: 'Отправить',
       chips: 'Частые вопросы', you: 'Вы', bot: 'Помощник',
       greet: 'Я отвечаю по готовой базе вопросов о сайте SAQ. Это не ИИ и не юридическая консультация. Выберите частый вопрос ниже или напишите свой.',
       thanks: 'Пожалуйста! Если появятся вопросы о сайте — пишите.', none: 'Не нашёл ответа на этот вопрос. Вот темы, по которым я могу помочь:', related: 'Похожие вопросы:',
       legal: 'Я не решаю кейсы и не даю юридических советов. Чтобы проверить ответ ИИ по вашему вопросу, вставьте его в «Правовой сканер», а выводы сверьте с официальным текстом ГК РК в «Әділет». В своей ситуации обратитесь к юристу.',
-      go: { home: 'Открыть главную', check: 'Открыть экспресс-проверку', scanner: 'Открыть сканер', practice: 'Открыть Юрпрактику', about: 'Открыть «О проекте»', settings: 'Открыть настройки ⚙' },
+      go: { home: 'Открыть главную', check: 'Открыть экспресс-проверку', scanner: 'Открыть сканер', practice: 'Открыть Юрпрактику', lab: 'Открыть ИИ-лабораторию', atlas: 'Открыть Атлас ГК', about: 'Открыть «О проекте»', settings: 'Открыть настройки ⚙' },
       adilet: 'ГК РК в «Әділет» ↗', article: (n) => `Статья ${n} в «Әділет» ↗` },
-    kk: { launch: 'SAQ көмекшісі', title: 'SAQ көмекшісі', close: 'Көмекшіні жабу', input: 'Сайт туралы сұрағыңыз', placeholder: 'SAQ сайты туралы сұраңыз…', send: 'Жіберу',
+    kk: { launch: 'SAQ көмекшісі', sub: 'Сайт туралы сұрақтар базасы бойынша жауап беремін · ЖИ емес', typing: 'Көмекші жазып жатыр…', title: 'SAQ көмекшісі', close: 'Көмекшіні жабу', input: 'Сайт туралы сұрағыңыз', placeholder: 'SAQ сайты туралы сұраңыз…', send: 'Жіберу',
       chips: 'Жиі қойылатын сұрақтар', you: 'Сіз', bot: 'Көмекші',
       greet: 'Мен SAQ сайты туралы дайын сұрақтар базасы бойынша жауап беремін. Бұл ЖИ емес және заң кеңесі емес. Төменнен жиі қойылатын сұрақты таңдаңыз немесе өз сұрағыңызды жазыңыз.',
       thanks: 'Оқасы жоқ! Сайт туралы сұрақтарыңыз болса, жазыңыз.', none: 'Бұл сұраққа жауап таппадым. Мына тақырыптар бойынша көмектесе аламын:', related: 'Ұқсас сұрақтар:',
       legal: 'Мен кейстерді шешпеймін және заң кеңесін бермеймін. ЖИ жауабын тексеру үшін оны «Құқықтық сканерге» қойыңыз, ал қорытындыларды «Әділет»-тегі ҚР АК ресми мәтінімен салыстырыңыз. Өз жағдайыңыз бойынша заңгерге жүгініңіз.',
-      go: { home: 'Басты бетті ашу', check: 'Жедел тексеруді ашу', scanner: 'Сканерді ашу', practice: 'Құқықтық тәжірибені ашу', about: '«Жоба туралы» ашу', settings: 'Баптауларды ашу ⚙' },
+      go: { home: 'Басты бетті ашу', check: 'Жедел тексеруді ашу', scanner: 'Сканерді ашу', practice: 'Құқықтық тәжірибені ашу', lab: 'ЖИ зертханасын ашу', atlas: 'АК атласын ашу', about: '«Жоба туралы» ашу', settings: 'Баптауларды ашу ⚙' },
       adilet: 'ҚР АК «Әділет»-те ↗', article: (n) => `${n}-бап «Әділет»-те ↗` },
-    en: { launch: 'SAQ Helper', title: 'SAQ Helper', close: 'Close the helper', input: 'Your question about the site', placeholder: 'Ask about the SAQ website…', send: 'Send',
+    en: { launch: 'SAQ Helper', sub: 'Answers from a fixed list of questions about the site · not AI', typing: 'The helper is typing…', title: 'SAQ Helper', close: 'Close the helper', input: 'Your question about the site', placeholder: 'Ask about the SAQ website…', send: 'Send',
       chips: 'Common questions', you: 'You', bot: 'Helper',
       greet: 'I answer from a ready-made list of questions about the SAQ website. This is not AI and not legal advice. Pick a common question below or type your own.',
       thanks: 'You’re welcome! Ask me anything about the site.', none: 'I couldn’t find an answer to that. Here are the topics I can help with:', related: 'Related questions:',
       legal: 'I don’t solve cases or give legal advice. To check an AI answer on your question, paste it into the Legal Scanner and compare the conclusions with the official text of the Civil Code on Adilet. For your own situation, talk to a lawyer.',
-      go: { home: 'Open Home', check: 'Open Quick Check', scanner: 'Open the scanner', practice: 'Open Legal Practice', about: 'Open About', settings: 'Open settings ⚙' },
+      go: { home: 'Open Home', check: 'Open Quick Check', scanner: 'Open the scanner', practice: 'Open Legal Practice', lab: 'Open the AI Lab', atlas: 'Open the Code Atlas', about: 'Open About', settings: 'Open settings ⚙' },
       adilet: 'Civil Code on Adilet ↗', article: (n) => `Article ${n} on Adilet ↗` },
   };
   const U = () => UI[lang()];
@@ -69,6 +69,12 @@
       ru: { q: 'Как работает Юрпрактика?', a: 'В «Юрпрактике» — учебные кейсы с ошибочными ответами ИИ. Выберите кейс, определите тип ошибки, найдите статью из базы, объясните, что нужно проверить, и предложите решение. После отправки откроется разбор с дословным текстом нормы. Автоматически оцениваются только тип ошибки и выбранная статья.' },
       kk: { q: 'Құқықтық тәжірибе қалай жұмыс істейді?', a: '«Құқықтық тәжірибеде» ЖИ-дің қате жауаптары бар оқу кейстері берілген. Кейсті таңдап, қате түрін анықтаңыз, базадан бапты табыңыз, нені тексеру керегін түсіндіріп, шешім ұсыныңыз. Жібергеннен кейін норманың сөзбе-сөз мәтіні бар талдау ашылады. Автоматты түрде тек қате түрі мен таңдалған бап бағаланады.' },
       en: { q: 'How does Legal Practice work?', a: 'Legal Practice has study cases with wrong AI answers. Pick a case, identify the type of error, find the article in the database, explain what needs checking and propose a solution. After you submit, a review opens with the verbatim text of the provision. Only the error type and the chosen article are scored automatically.' } },
+    { id: 'lab', go: ['lab', 'atlas'],
+      k: [['лаборатор', 1.4], ['laborat', 1.2], ['зертхан', 1.4], ['промпт', 1.4], ['prompt', 1.4], ['спросит', .9], ['сурау', .9], ['ask', .5], ['сравнит', 1.1], ['сравнен', .7], ['compare', 1.1], ['comparison', .7], ['салыстыр', 1.1], ['chatgpt', 1], ['gemini', 1], ['нейросет', .8], ['разных', .5], ['different', .5], ['әртүрлі', .5], ['арттурли', .5], ['атлас', 1.5], ['atlas', 1.5], ['созвезд', 1.4], ['constellat', 1.4], ['шокжулдыз', 1.4], ['шкал', 1.1], ['scale', .7], ['угада', 1.2], ['guess', 1.1], ['срок', .7], ['deadline', .7], ['мерзим', .7], ['связ', .6], ['силтеме', .5], ['links', .5], ['поиск', .5], ['search', .5], ['издеу', .5], ['карт', .6], ['map', .5]],
+      p: [['ai lab', 1.2], ['разных ии', 1], ['how to ask', .8], ['как спросить', .9], ['шкала сроков', 1.4], ['угадай срок', 1.5], ['созвездие ссылок', 1.5], ['поиск по кодексу', 1.2], ['search the code', 1.1], ['карта гк', 1], ['карта статей', 1.2], ['найти в кодексе', 1.1], ['найти слово', 1], ['term scale', 1.2], ['guess the term', 1.4], ['мерзимди тап', 1.4]],
+      ru: { q: 'Что такое ИИ-лаборатория и Атлас ГК?', a: 'Это два учебных инструмента. В «ИИ-лаборатории» раздел «Как спросить ИИ» собирает промпт: опираться только на ГК РК, указывать статью и пункт, цитировать норму и честно писать «не уверен»; ответ ChatGPT, Gemini или Claude затем проверяется в сканере. «Сравнение ИИ» сверяет два-три ответа на один кейс с загруженным ГК РК — это сравнение по совпадению с кодексом, а не оценка ИИ в целом. В «Атласе ГК» — шкала сроков, игра «Угадай срок» и созвездие ссылок между статьями; сроки и ссылки найдены автоматически, сверяйте их с «Әділет». А на карте статей в сканере есть поиск по тексту кодекса — по слову или номеру статьи.' },
+      kk: { q: 'ЖИ зертханасы және АК атласы деген не?', a: 'Бұл — екі оқу құралы. «ЖИ зертханасындағы» «ЖИ-ден қалай сұрау керек» бөлімі промпт құрастырады: тек ҚР АК-ге сүйену, бап пен тармақты көрсету, норманы келтіру және «сенімді емеспін» деп адал жазу; ChatGPT, Gemini немесе Claude жауабы содан кейін сканерде тексеріледі. «ЖИ жауаптарын салыстыру» бір кейске берілген екі-үш жауапты жүктелген ҚР АК-мен салыстырады — бұл кодекспен сәйкестік бойынша салыстыру, ЖИ-дің жалпы бағасы емес. «АК атласында» — мерзімдер шкаласы, «Мерзімді тап» ойыны және баптар арасындағы сілтемелер шоқжұлдызы; мерзімдер мен сілтемелер автоматты түрде табылған, оларды «Әділет»-пен салыстырыңыз. Ал сканердегі баптар картасында кодекс мәтіні бойынша іздеу бар — сөз немесе бап нөмірі бойынша.' },
+      en: { q: 'What are the AI Lab and the Code Atlas?', a: 'They are two learning tools. In the AI Lab, “How to ask an AI” builds a prompt: rely only on the Civil Code, give the article and clause, quote the norm and say “not sure” honestly; the answer of ChatGPT, Gemini or Claude is then checked in the scanner. “Compare AI answers” checks two or three answers to one case against the loaded Civil Code — it compares agreement with the Code, it is not an overall rating of the AI. The Code Atlas has a scale of terms, the «Guess the term» game and a constellation of links between articles; terms and links were found automatically, so check them on Adilet. The map of articles in the scanner also has a search of the text of the Code — by a word or an article number.' } },
     { id: 'trust', adilet: true, go: ['scanner'],
       k: [['довер', 1.2], ['trust', 1.2], ['сену', 1.2], ['сенуг', 1.2], ['верит', 1], ['надежн', 1], ['reliab', 1], ['rely', 1], ['точн', 1], ['accura', 1], ['ошиба', 1], ['ошибк', .6], ['кателес', 1], ['mistake', 1], ['wrong', .6], ['полност', .6], ['толык', .5], ['fully', .5], ['гарант', .8], ['guarant', .8], ['результат', .5], ['натиже', .5], ['result', .5]],
       p: [['make mistakes', .6], ['может ошибаться', .6]],
@@ -233,21 +239,36 @@
     const L = U();
     launch.querySelector('.saq-helper-launch-text').textContent = L.launch;
     launch.setAttribute('aria-label', '✦ ' + L.launch);
-    title.textContent = '✦ ' + L.title; closeBtn.setAttribute('aria-label', L.close); closeBtn.title = L.close;
+    title.textContent = L.title; closeBtn.setAttribute('aria-label', L.close); closeBtn.title = L.close;
+    panel.querySelector('.saq-helper-sub').textContent = L.sub;
     input.placeholder = L.placeholder; input.setAttribute('aria-label', L.input);
     form.querySelector('.saq-helper-send').textContent = L.send;
     chips.setAttribute('aria-label', L.chips);
     chips.innerHTML = HINTS.map(chip).join('');
     panel.setAttribute('lang', lang());
+    if (typingMsg) flushTyping();
     log.innerHTML = state.messages.map(msgHtml).join('');
     log.scrollTop = log.scrollHeight;
   }
   function push(m) { state.messages.push(m); log.insertAdjacentHTML('beforeend', msgHtml(m)); scrollLog(); }
+  let typingTimer = 0; let typingMsg = null;
+  function flushTyping() {
+    if (!typingMsg) return;
+    clearTimeout(typingTimer); typingTimer = 0;
+    const t = log.querySelector('.saq-helper-typing'); if (t) t.remove();
+    const m = typingMsg; typingMsg = null; push(m);
+  }
   function ask(text, id) {
     const q = String(text || '').trim(); if (!q) return;
+    flushTyping();
     push({ from: 'user', text: q });
     const res = id ? { kind: 'faq', id, related: [] } : answer(q);
-    push(Object.assign({ from: 'bot' }, res));
+    const msg = Object.assign({ from: 'bot' }, res);
+    if (reduced()) { push(msg); return; }
+    typingMsg = msg;
+    log.insertAdjacentHTML('beforeend', `<div class="saq-helper-msg is-bot saq-helper-typing" aria-hidden="true" title="${esc(U().typing)}"><i></i><i></i><i></i></div>`);
+    scrollLog();
+    typingTimer = setTimeout(flushTyping, 520);
   }
   const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
   function setOpen(open, viaKeyboard) {
@@ -309,17 +330,23 @@
   function build() {
     if (state.built || !document.body) return; state.built = true;
     launch = document.createElement('button');
-    launch.type = 'button'; launch.id = 'saq-helper-launch'; launch.className = 'saq-helper-launch';
+    launch.type = 'button'; launch.id = 'saq-helper-launch'; launch.className = 'saq-helper-launch saq-orb-launch';
     launch.setAttribute('aria-controls', 'saq-helper'); launch.setAttribute('aria-expanded', 'false'); launch.setAttribute('data-saq-no-translate', '');
-    launch.innerHTML = '<span class="saq-helper-star" aria-hidden="true">✦</span> <span class="saq-helper-launch-text"></span>';
+    launch.innerHTML = '<span class="saq-orb" aria-hidden="true"><span class="saq-orb-halo"></span><span class="saq-orb-sheen"></span><span class="saq-orb-star">✦</span><span class="saq-orb-spark"></span><span class="saq-orb-spark"></span><span class="saq-orb-spark"></span></span><span class="saq-helper-launch-text"></span>';
     panel = document.createElement('section');
     panel.id = 'saq-helper'; panel.className = 'saq-helper'; panel.hidden = true;
     panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'false'); panel.setAttribute('aria-labelledby', 'saq-helper-title'); panel.setAttribute('data-saq-no-translate', '');
-    panel.innerHTML = '<header class="saq-helper-head"><h2 id="saq-helper-title" tabindex="-1"></h2><button type="button" class="saq-helper-close">×</button></header>'
+    panel.innerHTML = '<header class="saq-helper-head"><div class="saq-helper-id"><span class="saq-orb saq-orb--mini" aria-hidden="true"><span class="saq-orb-sheen"></span><span class="saq-orb-star">✦</span></span><div><h2 id="saq-helper-title" tabindex="-1"></h2><p class="saq-helper-sub"></p></div></div><button type="button" class="saq-helper-close">×</button></header>'
       + '<div class="saq-helper-log" role="log" aria-live="polite" aria-relevant="additions"></div>'
       + '<div class="saq-helper-chips" role="group"></div>'
       + '<form class="saq-helper-form" autocomplete="off"><input class="saq-helper-input" type="text" maxlength="300" enterkeyhint="send"><button type="submit" class="saq-helper-send"></button></form>';
     document.body.appendChild(launch); document.body.appendChild(panel);
+    try {
+      if (!reduced() && !window.matchMedia('(max-width: 760px)').matches && !sessionStorage.getItem('saq-helper-peek')) {
+        sessionStorage.setItem('saq-helper-peek', '1');
+        setTimeout(() => { launch.classList.add('is-peek'); setTimeout(() => launch.classList.remove('is-peek'), 3800); }, 1600);
+      }
+    } catch (_) { /* storage off: no peek */ }
     log = panel.querySelector('.saq-helper-log'); chips = panel.querySelector('.saq-helper-chips'); form = panel.querySelector('.saq-helper-form');
     input = panel.querySelector('.saq-helper-input'); title = panel.querySelector('#saq-helper-title'); closeBtn = panel.querySelector('.saq-helper-close');
     renderAll();

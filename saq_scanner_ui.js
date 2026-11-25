@@ -729,6 +729,7 @@
     }
     return state.lawPromise;
   }
+  window.SAQLaw = { load: loadLaw, adiletUrl, status: () => t().status, actName: (n) => actName(n), art: (n) => t().art(n) };
   async function loadStatus() {
     if (!httpOrigin) return;
     try {
@@ -822,6 +823,19 @@
     linkArticles(out);
     out.classList.add('show');
     focusMark();
+    emitReport('saq:report-render');
+  }
+  // v29: tell saq_wow.js what the report shows (scales, live scan, map of the Code)
+  function emitReport(kind) {
+    const r = state.report; if (!r) return;
+    const aiById = new Map((state.ai && state.ai.results || []).map((x) => [x.id, x]));
+    const claims = r.claims.map((c) => {
+      const a = aiById.get(c.id); const use = aiUsable(a);
+      return { id: c.id, status: use ? a.status : c.status,
+        refs: c.refs.map((x) => ({ article: String(x.article), clause: x.clause ? String(x.clause) : '', state: x.state, act: x.act ? actName(x.act) : '' })),
+        target: use && a.article ? String(a.article) : (c.target ? String(c.target.article) : null) };
+    });
+    try { document.dispatchEvent(new CustomEvent(kind, { detail: { claims, labels: t().status } })); } catch (_) { /* old browsers: no extras */ }
   }
 
   /* ---------------------------------------------------------------- run */
@@ -859,6 +873,7 @@
       state.answer = answer; state.caseText = caseText; state.checkedAt = fromHist ? new Date(fromHist.at) : new Date(); state.sel = null; state.tab = null;
       state.ai = null; state.aiError = null; state.aiPending = false;
       renderReport();
+      emitReport('saq:scan-done');
       info.textContent = L.done(fmtDate(law.meta.edition_date));
       if (fromHist) {
         info.textContent = HI().opened + ' ' + info.textContent;
@@ -877,6 +892,7 @@
     $('#scan-info').textContent = '';
     const out = $('#scan-report'); out.classList.remove('show'); out.innerHTML = '';
     state.report = null; state.ai = null; state.aiError = null; state.answer = ''; state.caseText = ''; state.checkedAt = null; state.sel = null; state.tab = null; state.runId = (state.runId || 0) + 1;
+    try { document.dispatchEvent(new CustomEvent('saq:report-clear')); } catch (_) { /* nothing to reset */ }
     $('#case').dispatchEvent(new Event('input')); $('#ai').dispatchEvent(new Event('input'));
   }
   function useExample(key) {
